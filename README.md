@@ -1,59 +1,104 @@
-# TTDN3
+# TTDN-3 Store - News Management System
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.5.
+A complete news management system built with Angular 18+ and Firebase Firestore.
 
-## Development server
+## Features
 
-To start a local development server, run:
+### Admin Panel
+- ✅ Full CRUD operations for news management
+- ✅ Category management system
+- ✅ Rich text content editor
+- ✅ Image upload and management
+- ✅ News status management (draft/published)
+- ✅ Real-time data synchronization
 
-```bash
-ng serve
+### Public Pages
+- ✅ News listing with category filtering
+- ✅ News detail pages with rich content display
+- ✅ Responsive design
+- ✅ Breadcrumb navigation
+- ✅ Search and pagination
+- ✅ Share functionality
+
+### Technical Features
+- ✅ Angular 18+ with standalone components
+- ✅ Firebase Firestore integration
+- ✅ Angular Material UI components
+- ✅ TypeScript with strict typing
+- ✅ Reactive forms with validation
+- ✅ Dark theme support
+- ✅ Mobile-responsive design
+
+## Tech Stack
+
+- **Frontend**: Angular 18+, Angular Material, TypeScript
+- **Backend**: Firebase Firestore
+- **Styling**: SCSS with CSS variables
+- **Build Tool**: Angular CLI
+- **Package Manager**: npm
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── pages/
+│   │   ├── admin/
+│   │   │   └── news-admin/          # Admin panel for news management
+│   │   ├── news/                    # Public news listing
+│   │   └── news-detail/             # Individual news article pages
+│   ├── services/
+│   │   ├── admin-news.service.ts    # News management service
+│   │   └── firebase-data.service.ts # Firebase integration
+│   ├── pipes/
+│   │   └── nl2br.pipe.ts           # Text formatting pipe
+│   └── components/                  # Reusable UI components
+├── environments/
+│   └── firebase.config.example.ts   # Firebase configuration template
+└── assets/
+    ├── data/                        # Mock data files
+    └── images/                      # Static images
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Setup Instructions
 
-## Code scaffolding
+### Prerequisites
+- Node.js (v18 or higher)
+- npm
+- Angular CLI (`npm install -g @angular/cli`)
+- Firebase account
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Installation
 
-```bash
-ng generate component component-name
-```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/TTDN_3.git
+   cd TTDN_3
+   ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-```bash
-ng generate --help
-```
+3. **Firebase Setup**
+   - Copy `src/environments/firebase.config.example.ts` to `src/environments/firebase.config.ts`
+   - Fill in your Firebase project configuration
+   - Create Firestore collections: `news` and `news_categories`
 
-## Building
+4. **Run the development server**
+   ```bash
+   ng serve
+   ```
+   Navigate to `http://localhost:4200/`
 
-To build the project run:
+5. **Access Admin Panel**
+   - Go to `/admin/news-admin` to manage news articles
+   - Use the "Initialize Sample Data" button to create test data
 
-```bash
-ng build
-```
+## Available Scripts
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- `npm start` - Start development server
+- `npm run build` - Build for production
+- `npm test` - Run unit tests
+- `npm run lint` - Run linting
