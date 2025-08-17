@@ -1,0 +1,126 @@
+<div class="news-detail-container">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <mat-icon>hourglass_empty</mat-icon>
+    <h3>Đang tải tin tức...</h3>
+  </div>
+
+  <!-- Not Found State -->
+  <div *ngIf="notFound && !isLoading" class="not-found-state">
+    <mat-icon>error_outline</mat-icon>
+    <h3>Không tìm thấy tin tức</h3>
+    <p>Tin tức bạn đang tìm không tồn tại hoặc đã bị xóa.</p>
+    <button mat-raised-button color="primary" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      Quay lại danh sách tin tức
+    </button>
+  </div>
+
+  <!-- News Content -->
+  <div *ngIf="news && !isLoading" class="news-content">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <a routerLink="/news" mat-button>
+        <mat-icon>home</mat-icon>
+        Tin tức
+      </a>
+      <mat-icon>chevron_right</mat-icon>
+      <span>{{getCategoryName()}}</span>
+      <mat-icon>chevron_right</mat-icon>
+      <span class="current">{{news.title}}</span>
+    </nav>
+
+    <!-- Article Header -->
+    <header class="article-header">
+      <div class="category-chip">
+        <mat-chip [style.background-color]="news.category?.color || '#2196F3'">
+          <mat-icon *ngIf="news.category?.icon">{{news.category.icon}}</mat-icon>
+          {{getCategoryName()}}
+        </mat-chip>
+      </div>
+      
+      <h1 class="article-title">{{news.title}}</h1>
+      
+      <div class="article-meta">
+        <div class="meta-item">
+          <mat-icon>schedule</mat-icon>
+          <span>{{formatDate(news.publishedAt || news.createdAt)}}</span>
+        </div>
+        <div class="meta-item" *ngIf="news.author">
+          <mat-icon>person</mat-icon>
+          <span>{{news.author.name}}</span>
+        </div>
+        <div class="meta-item" *ngIf="news.viewCount">
+          <mat-icon>visibility</mat-icon>
+          <span>{{news.viewCount}} lượt xem</span>
+        </div>
+      </div>
+
+      <!-- Featured Badge -->
+      <div class="featured-badge" *ngIf="news.featured">
+        <mat-chip color="accent">
+          <mat-icon>star</mat-icon>
+          Tin nổi bật
+        </mat-chip>
+      </div>
+    </header>
+
+    <!-- Featured Image -->
+    <div class="article-image" *ngIf="news.featuredImage">
+      <img [src]="news.featuredImage" [alt]="news.title">
+    </div>
+
+    <!-- Article Excerpt -->
+    <div class="article-excerpt">
+      <p class="excerpt-text">{{news.excerpt}}</p>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Article Content -->
+    <div class="article-body">
+      <!-- For now, display content as text. Later can add rich text/markdown support -->
+      <div class="content-text" [innerHTML]="news.content | nl2br"></div>
+    </div>
+
+    <!-- Tags -->
+    <div class="article-tags" *ngIf="news.tags && news.tags.length > 0">
+      <h4>Thẻ:</h4>
+      <mat-chip-set>
+        <mat-chip *ngFor="let tag of news.tags">
+          <mat-icon>label</mat-icon>
+          {{tag}}
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Article Actions -->
+    <div class="article-actions">
+      <button mat-raised-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Quay lại
+      </button>
+      
+      <div class="social-actions">
+        <button mat-button (click)="shareNews()">
+          <mat-icon>share</mat-icon>
+          Chia sẻ
+        </button>
+        <button mat-icon-button>
+          <mat-icon>bookmark_border</mat-icon>
+        </button>
+        <button mat-icon-button>
+          <mat-icon>print</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Related News Section (placeholder for future) -->
+    <div class="related-news">
+      <h3>Tin tức liên quan</h3>
+      <p class="coming-soon">Chức năng này sẽ được phát triển trong tương lai</p>
+    </div>
+  </div>
+</div>

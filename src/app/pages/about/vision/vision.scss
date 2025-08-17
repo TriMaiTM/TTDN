@@ -1,0 +1,467 @@
+.vision-container {
+  min-height: 100vh;
+  
+  // Hero Section
+  .vision-hero {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    padding: 100px 0 80px;
+    text-align: center;
+    
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px;
+      
+      h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        
+        @media (max-width: 768px) {
+          font-size: 2rem;
+        }
+      }
+      
+      .hero-subtitle {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        font-weight: 300;
+      }
+    }
+  }
+  
+  // Common Section Styles
+  section {
+    padding: 80px 0;
+    
+    &:nth-child(even) {
+      background: var(--bg-tertiary);
+    }
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    
+    &.centered {
+      justify-content: center;
+      text-align: center;
+      flex-direction: column;
+      gap: 10px;
+      
+      mat-icon {
+        font-size: 3rem;
+        width: 3rem;
+        height: 3rem;
+        color: var(--primary-color);
+      }
+      
+      p {
+        max-width: 600px;
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+      }
+    }
+    
+    mat-icon {
+      color: var(--primary-color);
+      font-size: 2rem;
+      width: 2rem;
+      height: 2rem;
+    }
+    
+    h2 {
+      margin: 0;
+      color: var(--text-primary);
+      font-size: 2.5rem;
+      font-weight: 600;
+    }
+  }
+  
+  // Vision Section
+  .vision-section {
+    .vision-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+    }
+    
+    .vision-statement {
+      font-size: 1.4rem;
+      line-height: 1.8;
+      color: var(--text-primary);
+      font-style: italic;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 15px;
+      border-left: 5px solid var(--primary-color);
+      margin-bottom: 40px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .vision-goals {
+      h3 {
+        color: var(--text-primary);
+        margin-bottom: 20px;
+        font-size: 1.3rem;
+      }
+      
+      ul {
+        list-style: none;
+        padding: 0;
+        
+        li {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          padding: 12px 0;
+          border-bottom: 1px solid var(--border-color);
+          
+          &:last-child {
+            border-bottom: none;
+          }
+          
+          mat-icon {
+            color: #4caf50;
+            font-size: 1.5rem;
+            width: 1.5rem;
+            height: 1.5rem;
+          }
+          
+          span {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+          }
+        }
+      }
+    }
+    
+    .vision-image {
+      img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 15px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      }
+    }
+  }
+  
+  // Mission Section
+  .mission-section {
+    .mission-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        
+        .mission-image {
+          order: -1;
+        }
+      }
+    }
+    
+    .mission-statement {
+      font-size: 1.4rem;
+      line-height: 1.8;
+      color: var(--text-primary);
+      font-style: italic;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 15px;
+      border-left: 5px solid var(--accent-color);
+      margin-bottom: 40px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .mission-commitments {
+      h3 {
+        color: var(--text-primary);
+        margin-bottom: 25px;
+        font-size: 1.3rem;
+      }
+    }
+    
+    .commitment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+    
+    .commitment-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      padding: 20px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      }
+      
+      mat-icon {
+        color: var(--accent-color);
+        font-size: 1.8rem;
+        width: 1.8rem;
+        height: 1.8rem;
+        margin-top: 2px;
+      }
+      
+      h4 {
+        margin: 0 0 8px 0;
+        color: var(--text-primary);
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+      
+      p {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+    }
+    
+    .mission-image {
+      img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 15px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      }
+    }
+  }
+  
+  // Values Section
+  .values-section {
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+    }
+    
+    .value-card {
+      background: var(--card-bg);
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      border: 1px solid var(--border-color);
+      
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        
+        .value-icon mat-icon {
+          transform: scale(1.1);
+        }
+      }
+      
+      .value-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        border-radius: 50%;
+        margin-bottom: 25px;
+        
+        mat-icon {
+          color: white;
+          font-size: 2rem;
+          width: 2rem;
+          height: 2rem;
+          transition: transform 0.3s ease;
+        }
+      }
+      
+      h3 {
+        color: var(--text-primary);
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+      }
+      
+      p {
+        color: var(--text-secondary);
+        line-height: 1.7;
+        margin-bottom: 20px;
+        font-size: 1rem;
+      }
+      
+      .value-details {
+        ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          
+          li {
+            color: var(--text-secondary);
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            font-size: 0.95rem;
+            
+            &:before {
+              content: "→";
+              position: absolute;
+              left: 0;
+              color: var(--primary-color);
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Strategy Section
+  .strategy-section {
+    background: var(--bg-primary);
+    
+    h2 {
+      text-align: center;
+      color: var(--text-primary);
+      font-size: 2.5rem;
+      margin-bottom: 60px;
+      font-weight: 600;
+    }
+    
+    .strategy-timeline {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 40px;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+    }
+    
+    .strategy-phase {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 35px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      }
+      
+      .phase-header {
+        margin-bottom: 25px;
+        
+        h3 {
+          color: var(--text-primary);
+          font-size: 1.4rem;
+          font-weight: 600;
+          margin-bottom: 10px;
+        }
+        
+        .phase-label {
+          background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+          color: white;
+          padding: 6px 16px;
+          border-radius: 20px;
+          font-size: 0.9rem;
+          font-weight: 500;
+        }
+      }
+      
+      .phase-content {
+        ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          
+          li {
+            color: var(--text-secondary);
+            padding: 12px 0;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.6;
+            border-bottom: 1px solid var(--border-color);
+            
+            &:last-child {
+              border-bottom: none;
+            }
+            
+            &:before {
+              content: "▶";
+              position: absolute;
+              left: 0;
+              color: var(--primary-color);
+              font-size: 0.8rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Dark Theme Support
+:host-context(.dark-theme) {
+  .vision-container {
+    .vision-hero {
+      background: linear-gradient(135deg, #1a237e, #3f51b5);
+    }
+    
+    .vision-statement,
+    .mission-statement {
+      background: var(--card-bg);
+      border-left-color: var(--primary-color);
+    }
+    
+    .value-card,
+    .commitment-item,
+    .strategy-phase {
+      background: var(--card-bg);
+      border-color: var(--border-color);
+      
+      &:hover {
+        box-shadow: 0 8px 30px rgba(255,255,255,0.1);
+      }
+    }
+  }
+}

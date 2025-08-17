@@ -1,0 +1,6 @@
+.hero { height:420px; position:relative; background-image: url('/assets/images/hero.jpg'); background-size:cover; background-position:center; color:#fff; display:flex; align-items:center;
+  .hero-overlay { position:absolute; inset:0; background: linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.45)); }
+  .hero-inner { position:relative; z-index:2; padding-top:40px; }
+  .ctas { display:flex; gap:12px; justify-content:center; margin-top:12px; }
+}
+@media(max-width:768px){ .hero{height:300px} }

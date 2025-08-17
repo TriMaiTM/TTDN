@@ -1,0 +1,4 @@
+[
+  {"id":"p001","name":"Khu phức hợp ABC","location":"Đà Nẵng","year":2024,"cover":"assets/images/p001.jpg","desc":"Thi công tổng thầu khu phức hợp."},
+  {"id":"p002","name":"Nhà máy XYZ","location":"Quảng Nam","year":2023,"cover":"assets/images/p002.jpg","desc":"Thi công nhà xưởng tiêu chuẩn."}
+]

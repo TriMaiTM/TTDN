@@ -1,0 +1,32 @@
+<div class="carousel" tabindex="0" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()" (keydown)="onKey($event)">
+  <div class="slides">
+    <ng-container *ngFor="let s of slides; let i = index">
+      <div class="slide" [class.active]="i === current" [style.backgroundImage]="'url(' + s.image + ')'">
+        <div class="overlay"></div>
+
+        <div class="slide-inner container">
+          <!-- center content -->
+          <div class="content">
+            <h1 class="title" *ngIf="s.title">{{ s.title }}</h1>
+            <p class="subtitle" *ngIf="s.subtitle">{{ s.subtitle }}</p>
+
+            <div class="logo-wrap" *ngIf="s.logo">
+              <img [src]="s.logo" alt="logo">
+            </div>
+
+            <a class="cta" *ngIf="s.ctaText && s.ctaLink" [routerLink]="s.ctaLink">{{ s.ctaText }}</a>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- arrows -->
+  <button class="arrow left" (click)="prev()" aria-label="Previous slide">‹</button>
+  <button class="arrow right" (click)="next()" aria-label="Next slide">›</button>
+
+  <!-- dots -->
+  <div class="dots">
+    <button *ngFor="let _ of slides; let i = index" class="dot" [class.active]="i === current" (click)="goTo(i)" [attr.aria-label]="'Slide '+(i+1)"></button>
+  </div>
+</div>

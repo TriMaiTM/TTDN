@@ -1,0 +1,210 @@
+:root {
+  --accent-yellow: #caa84a;
+  --nav-text: #111;
+  --menu-border: #0f6b66;
+  --header-bg: #ffffff;
+  --dropdown-bg: #ffffff;
+}
+
+.site-toolbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--nav-text);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+
+  .toolbar-inner {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    width:100%;
+    max-width:1200px;
+    margin:0 auto;
+    padding:8px 16px;
+  }
+
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 20px;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: var(--nav-text);
+      opacity: 0.7;
+    }
+
+    mat-slide-toggle {
+      ::ng-deep .mat-slide-toggle-bar {
+        background-color: rgba(0,0,0,0.12);
+      }
+
+      ::ng-deep .mat-slide-toggle-thumb {
+        background-color: #fff;
+      }
+
+      ::ng-deep .mat-slide-toggle-checked .mat-slide-toggle-bar {
+        background-color: var(--accent-yellow);
+      }
+
+      ::ng-deep .mat-slide-toggle-checked .mat-slide-toggle-thumb {
+        background-color: #333;
+      }
+    }
+
+    @media (max-width: 900px) {
+      margin: 0 10px;
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  .nav-links {
+    display:flex;
+    gap:18px;
+    align-items:center;
+    position: relative;
+  }
+
+  .nav-item {
+    color: var(--nav-text);
+    font-weight:700;
+    text-transform: uppercase;
+    padding:8px 10px;
+    border-radius:4px;
+    transition: color .15s ease, background .15s ease;
+    cursor: pointer;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+
+  /* hover -> đổi màu chữ sang vàng đậm */
+  .nav-item:hover {
+    color: var(--accent-yellow);
+    background: transparent;
+  }
+
+  /* active link */
+  a.active.nav-item { color: var(--accent-yellow); }
+
+  /* dropdown wrapper */
+  .has-dropdown {
+    position: relative;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+
+  .label { text-decoration:none; color:inherit; }
+
+  .caret { font-size:14px; color: var(--nav-text); transition: transform .18s ease, color .18s ease; }
+
+  /* khi dropdown visible -> caret đổi màu và rotate */
+  /* .dropdown.show + .dummy {}  not used, kept for clarity */
+
+  /* dropdown panel (absolute) */
+  .dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0; /* panel bám vào mép phải của wrapper — giúp mũi tên hiển thị bên phải */
+    min-width: 240px;
+    background: var(--dropdown-bg);
+    border: 2px solid var(--menu-border);
+    border-radius: 6px;
+    box-shadow: 0 8px 22px var(--shadow);
+    padding: 8px 6px;
+    display: none;
+    z-index: 9999;
+    transform-origin: top right;
+    transition: background-color 0.3s ease;
+  }
+
+  .dropdown.show {
+    display: block;
+    animation: dropdownIn .18s ease;
+  }
+
+  .dropdown a {
+    display:block;
+    padding:10px 12px;
+    color: var(--text-primary);
+    text-decoration:none;
+    border-radius:4px;
+    transition: background .12s ease, color .12s ease;
+  }
+
+  .dropdown a:hover {
+    background: rgba(202,168,74,0.08);
+    color: var(--accent-yellow);
+  }
+
+  /* little arrow (triangle) on the RIGHT side of the panel */
+  .dropdown::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    right: 28px; /* chỉnh để canh mũi tên ngay dưới caret/label */
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid var(--dropdown-bg);
+    z-index: 3;
+  }
+  .dropdown::after {
+    content: "";
+    position: absolute;
+    top: -12px;
+    right: 26px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid var(--menu-border);
+    z-index: 2;
+  }
+
+  @keyframes dropdownIn {
+    from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  // Contact button styling
+  .contact-btn {
+    margin-left: 20px;
+    color: white !important;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+  }
+
+  // Admin link styling
+  .admin-link {
+    margin-left: 15px;
+    color: var(--text-color) !important;
+    display: flex;
+    align-items: center;
+    opacity: 0.7;
+    
+    &:hover {
+      opacity: 1;
+      color: var(--accent-color) !important;
+    }
+    
+    mat-icon {
+      font-size: 20px;
+    }
+  }
+}
+
+/* mobile */
+@media (max-width: 900px) {
+  .nav-links { display:none; }
+  .mobile-menu-btn { display:inline-flex; }
+  .dropdown { display: none !important; } /* hide desktop dropdown on mobile */
+}

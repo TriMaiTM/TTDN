@@ -1,0 +1,424 @@
+.story-container {
+  min-height: 100vh;
+  
+  // Hero Section
+  .story-hero {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    padding: 100px 0 80px;
+    text-align: center;
+    
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px;
+      
+      h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        
+        @media (max-width: 768px) {
+          font-size: 2rem;
+        }
+      }
+      
+      .hero-subtitle {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        font-weight: 300;
+      }
+    }
+  }
+  
+  // Common Section Styles
+  section {
+    padding: 80px 0;
+    
+    &:nth-child(even) {
+      background: var(--bg-tertiary);
+    }
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  // Timeline Section
+  .timeline-section {
+    h2 {
+      text-align: center;
+      color: var(--text-primary);
+      font-size: 2.5rem;
+      margin-bottom: 60px;
+      font-weight: 600;
+    }
+    
+    .timeline {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--primary-color);
+        transform: translateX(-50%);
+        
+        @media (max-width: 768px) {
+          left: 30px;
+        }
+      }
+    }
+    
+    .timeline-item {
+      position: relative;
+      margin-bottom: 50px;
+      
+      &:nth-child(odd) {
+        padding-left: 60%;
+        
+        @media (max-width: 768px) {
+          padding-left: 80px;
+          padding-right: 0;
+        }
+        
+        .timeline-year {
+          left: -80px;
+          
+          @media (max-width: 768px) {
+            left: -60px;
+          }
+        }
+      }
+      
+      &:nth-child(even) {
+        padding-right: 60%;
+        text-align: right;
+        
+        @media (max-width: 768px) {
+          padding-left: 80px;
+          padding-right: 0;
+          text-align: left;
+        }
+        
+        .timeline-year {
+          right: -80px;
+          
+          @media (max-width: 768px) {
+            left: -60px;
+            right: auto;
+          }
+        }
+      }
+      
+      .timeline-year {
+        position: absolute;
+        top: 0;
+        width: 80px;
+        height: 80px;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.2rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        
+        @media (max-width: 768px) {
+          width: 60px;
+          height: 60px;
+          font-size: 1rem;
+        }
+      }
+      
+      .timeline-content {
+        background: var(--card-bg);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        border: 1px solid var(--border-color);
+        
+        h3 {
+          color: var(--text-primary);
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin-bottom: 15px;
+        }
+        
+        p {
+          color: var(--text-secondary);
+          line-height: 1.7;
+          margin: 0;
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+  
+  // Founders Section
+  .founders-section {
+    background: var(--bg-primary);
+    
+    h2 {
+      text-align: center;
+      color: var(--text-primary);
+      font-size: 2.5rem;
+      margin-bottom: 60px;
+      font-weight: 600;
+    }
+    
+    .founders-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 50px;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+    }
+    
+    .founder-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 36px rgba(0,0,0,0.15);
+      }
+      
+      .founder-image {
+        width: 100%;
+        height: 250px;
+        overflow: hidden;
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+        
+        &:hover img {
+          transform: scale(1.05);
+        }
+      }
+      
+      .founder-info {
+        padding: 30px;
+        
+        h3 {
+          color: var(--text-primary);
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin-bottom: 8px;
+        }
+        
+        .title {
+          color: var(--primary-color);
+          font-size: 1.1rem;
+          font-weight: 500;
+          margin-bottom: 15px;
+        }
+        
+        .bio {
+          color: var(--text-secondary);
+          line-height: 1.6;
+          margin: 0;
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+  
+  // Achievements Section
+  .achievements-section {
+    h2 {
+      text-align: center;
+      color: var(--text-primary);
+      font-size: 2.5rem;
+      margin-bottom: 60px;
+      font-weight: 600;
+    }
+    
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+    }
+    
+    .achievement-card {
+      background: var(--card-bg);
+      padding: 35px 25px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        
+        mat-icon {
+          transform: scale(1.1);
+        }
+      }
+      
+      mat-icon {
+        font-size: 3rem;
+        width: 3rem;
+        height: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        transition: transform 0.3s ease;
+      }
+      
+      h3 {
+        color: var(--text-primary);
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        line-height: 1.4;
+      }
+      
+      p {
+        color: var(--accent-color);
+        font-weight: 500;
+        margin-bottom: 10px;
+        font-size: 1rem;
+      }
+      
+      .achievement-desc {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+    }
+  }
+  
+  // Culture Section
+  .culture-section {
+    background: var(--bg-primary);
+    
+    h2 {
+      text-align: center;
+      color: var(--text-primary);
+      font-size: 2.5rem;
+      margin-bottom: 60px;
+      font-weight: 600;
+    }
+    
+    .culture-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+    }
+    
+    .culture-text {
+      h3 {
+        color: var(--text-primary);
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
+      
+      p {
+        color: var(--text-secondary);
+        line-height: 1.7;
+        margin-bottom: 30px;
+        font-size: 1.1rem;
+      }
+    }
+    
+    .culture-features {
+      .culture-feature {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 25px;
+        
+        mat-icon {
+          color: var(--accent-color);
+          font-size: 2rem;
+          width: 2rem;
+          height: 2rem;
+          margin-top: 2px;
+        }
+        
+        h4 {
+          color: var(--text-primary);
+          font-size: 1.2rem;
+          font-weight: 600;
+          margin: 0 0 5px 0;
+        }
+        
+        p {
+          color: var(--text-secondary);
+          margin: 0;
+          font-size: 1rem;
+          line-height: 1.5;
+        }
+      }
+    }
+    
+    .culture-image {
+      img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 15px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      }
+    }
+  }
+}
+
+// Dark Theme Support
+:host-context(.dark-theme) {
+  .story-container {
+    .story-hero {
+      background: linear-gradient(135deg, #1a237e, #3f51b5);
+    }
+    
+    .timeline-item .timeline-content,
+    .founder-card,
+    .achievement-card {
+      background: var(--card-bg);
+      border-color: var(--border-color);
+      
+      &:hover {
+        box-shadow: 0 12px 36px rgba(255,255,255,0.1);
+      }
+    }
+    
+    .timeline::before {
+      background: var(--primary-color);
+    }
+  }
+}

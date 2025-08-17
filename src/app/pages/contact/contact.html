@@ -1,0 +1,26 @@
+<div class="container">
+  <h2>Liên hệ</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="contact-form">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Họ và tên</mat-label>
+      <input matInput formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-50">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-50">
+      <mat-label>Số điện thoại</mat-label>
+      <input matInput formControlName="phone">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Nội dung</mat-label>
+      <textarea matInput rows="6" formControlName="message"></textarea>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Gửi liên hệ</button>
+  </form>
+</div>

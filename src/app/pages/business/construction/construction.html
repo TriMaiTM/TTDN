@@ -1,0 +1,56 @@
+<div class="construction-page">
+  <!-- Hero section -->
+  <section class="hero">
+    <div class="container">
+      <h1>THI CÔNG XÂY DỰNG</h1>
+      <p class="lead">Chuyên nghiệp - Chất lượng - Tiến độ</p>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="services container">
+    <h2>Dịch vụ thi công</h2>
+    <div class="services-grid">
+      <div *ngFor="let service of services" class="service-item">
+        <mat-icon>construction</mat-icon>
+        <span>{{ service }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="projects container">
+    <h2>Dự án tiêu biểu</h2>
+    <div class="projects-grid">
+      <mat-card *ngFor="let project of projects" class="project-card">
+        <img mat-card-image [src]="project.image" [alt]="project.title">
+        <mat-card-content>
+          <mat-card-title>{{ project.title }}</mat-card-title>
+          <p>{{ project.description }}</p>
+          <div class="project-info">
+            <div class="info-item">
+              <mat-icon>square_foot</mat-icon>
+              <span>{{ project.area }}</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>schedule</mat-icon>
+              <span>{{ project.duration }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="primary">XEM CHI TIẾT</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- Call to action -->
+  <section class="cta">
+    <div class="container">
+      <h2>Cần tư vấn thi công xây dựng?</h2>
+      <p>Liên hệ ngay để được báo giá và tư vấn miễn phí</p>
+      <button mat-raised-button color="accent" routerLink="/contact">LIÊN HỆ NGAY</button>
+    </div>
+  </section>
+</div>

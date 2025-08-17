@@ -1,0 +1,39 @@
+<div class="slider" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+  <!-- Container ảnh -->
+  <div class="slider-container">
+    <div 
+      class="slides" 
+      [style.transform]="'translateX(-' + (currentIndex * 33.333) + '%)'"
+    >
+      <div 
+        class="slide" 
+        *ngFor="let image of images; let i = index"
+        [style.background-image]="'url(' + image + ')'"
+      >
+        <!-- Company name overlay -->
+        <div class="slide-content">
+          <h1>CÔNG TY CỔ PHẦN THƯƠNG MẠI ĐẦU TƯ XÂY DỰNG PHƯỚC TRƯỜNG SANH</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation buttons -->
+  <button class="nav-btn prev" (click)="prev()" type="button">
+    <span>‹</span>
+  </button>
+  <button class="nav-btn next" (click)="next()" type="button">
+    <span>›</span>
+  </button>
+
+  <!-- Dots indicator -->
+  <div class="dots">
+    <button 
+      *ngFor="let image of images; let i = index"
+      class="dot"
+      [class.active]="i === currentIndex"
+      (click)="goToSlide(i)"
+      type="button"
+    ></button>
+  </div>
+</div>

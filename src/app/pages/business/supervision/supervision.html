@@ -1,0 +1,102 @@
+<div class="supervision-page">
+  <!-- Hero section -->
+  <section class="hero">
+    <div class="container">
+      <h1>TƯ VẤN GIÁM SÁT & QUẢN LÝ DỰ ÁN</h1>
+      <p class="lead">Dịch vụ giám sát thi công và quản lý dự án chuyên nghiệp</p>
+    </div>
+  </section>
+
+  <!-- Services section -->
+  <section class="services container">
+    <h2>DỊCH VỤ GIÁM SÁT & QUẢN LÝ</h2>
+    <div class="services-grid">
+      <mat-card *ngFor="let service of services" class="service-card">
+        <mat-card-header>
+          <div mat-card-avatar class="service-avatar">
+            <mat-icon>{{ service.icon }}</mat-icon>
+          </div>
+          <mat-card-title>{{ service.title }}</mat-card-title>
+          <mat-card-subtitle>{{ service.description }}</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <ul class="feature-list">
+            <li *ngFor="let feature of service.features">
+              <mat-icon>check_circle</mat-icon>
+              {{ feature }}
+            </li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- Benefits section -->
+  <section class="benefits">
+    <div class="container">
+      <h2>LỢI ÍCH KHÁCH HÀNG</h2>
+      <div class="benefits-grid">
+        <div *ngFor="let benefit of benefits" class="benefit-item">
+          <div class="benefit-icon">
+            <mat-icon>{{ benefit.icon }}</mat-icon>
+          </div>
+          <h3>{{ benefit.title }}</h3>
+          <p>{{ benefit.description }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process section -->
+  <section class="process container">
+    <h2>QUY TRÌNH GIÁM SÁT</h2>
+    <div class="process-phases">
+      <div *ngFor="let phase of process; let i = index" class="process-phase">
+        <div class="phase-header">
+          <div class="phase-number">{{ i + 1 }}</div>
+          <h3>{{ phase.phase }}</h3>
+        </div>
+        <div class="phase-activities">
+          <div *ngFor="let activity of phase.activities" class="activity">
+            <mat-icon>check</mat-icon>
+            <span>{{ activity }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects showcase -->
+  <section class="projects">
+    <div class="container">
+      <h2>DỰ ÁN TIÊU BIỂU</h2>
+      <div class="projects-grid">
+        <mat-card *ngFor="let project of projects" class="project-card">
+          <img mat-card-image [src]="project.image" [alt]="project.name">
+          <mat-card-content>
+            <h3>{{ project.name }}</h3>
+            <div class="project-details">
+              <p><mat-icon>location_on</mat-icon> {{ project.location }}</p>
+              <p><mat-icon>monetization_on</mat-icon> {{ project.value }}</p>
+              <p><mat-icon>schedule</mat-icon> {{ project.duration }}</p>
+              <p><mat-icon>info</mat-icon> {{ project.status }}</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to action -->
+  <section class="cta">
+    <div class="container">
+      <h2>Cần dịch vụ giám sát dự án?</h2>
+      <p>Liên hệ với chúng tôi để được tư vấn miễn phí</p>
+      <div class="cta-buttons">
+        <button mat-raised-button color="primary" routerLink="/contact">LIÊN HỆ TƯ VẤN</button>
+        <button mat-stroked-button routerLink="/projects">XEM THÊM DỰ ÁN</button>
+      </div>
+    </div>
+  </section>
+</div>

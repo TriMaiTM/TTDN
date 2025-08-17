@@ -1,0 +1,222 @@
+<div class="products-container">
+  <!-- Hero Section -->
+  <section class="products-hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>{{ currentCategory?.name || 'SẢN PHẨM' }}</h1>
+        <p>{{ currentCategory?.description || 'Khám phá đa dạng sản phẩm thiết bị vật tư xây dựng chất lượng cao' }}</p>
+        
+        <div class="breadcrumb" *ngIf="currentCategory">
+          <a routerLink="/products">Sản phẩm</a>
+          <mat-icon>chevron_right</mat-icon>
+          <span>{{ currentCategory.name }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filters Section -->
+  <section class="filters-section">
+    <div class="container">
+      <div class="filters-header">
+        <h3>Tìm Kiếm & Lọc Sản Phẩm</h3>
+        <button mat-button (click)="clearFilters()" class="clear-filters">
+          <mat-icon>clear</mat-icon>
+          Xóa bộ lọc
+        </button>
+      </div>
+      
+      <div class="filters-content">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Tìm kiếm sản phẩm</mat-label>
+          <input matInput [formControl]="searchControl" placeholder="Nhập tên sản phẩm...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Danh mục</mat-label>
+          <mat-select [formControl]="categoryControl">
+            <mat-option value="">Tất cả danh mục</mat-option>
+            <mat-option *ngFor="let category of categories$ | async" [value]="category.slug">
+              {{ category.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Sắp xếp theo</mat-label>
+          <mat-select [formControl]="sortControl">
+            <mat-option value="name">Tên A-Z</mat-option>
+            <mat-option value="price">Giá thấp đến cao</mat-option>
+            <mat-option value="rating">Đánh giá cao nhất</mat-option>
+            <mat-option value="createdAt">Mới nhất</mat-option>
+            <mat-option value="discount">Giảm giá nhiều nhất</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Grid -->
+  <section class="products-section">
+    <div class="container">
+      <div class="products-layout">
+        <!-- Category Filter Sidebar -->
+        <aside class="category-sidebar">
+          <app-category-filter
+            [selectedCategory]="categoryControl.value"
+            [totalProducts]="(searchResult$ | async)?.total || 0"
+            (categorySelected)="onCategorySelected($event)"
+            (quickFilterApplied)="onQuickFilterApplied($event)">
+          </app-category-filter>
+        </aside>
+
+        <!-- Products Content -->
+        <main class="products-content">
+          <div class="products-header" *ngIf="searchResult$ | async as result">
+            <h3>
+              Tìm thấy {{ result.total }} sản phẩm
+              <span *ngIf="currentCategory"> trong danh mục "{{ currentCategory.name }}"</span>
+            </h3>
+            <p class="results-info">
+              Hiển thị {{ (result.page - 1) * result.limit + 1 }} - 
+              {{ getMin(result.page * result.limit, result.total) }} 
+              trong tổng số {{ result.total }} sản phẩm
+            </p>
+          </div>
+
+          <div class="products-grid" *ngIf="searchResult$ | async as result">
+        <div class="product-card" *ngFor="let product of result.items">
+          <mat-card>
+            <div class="product-image">
+              <img [src]="product.images[0]" [alt]="product.name" (click)="goToProduct(product.id)">
+              
+              <!-- Discount badge -->
+              <div class="discount-badge" *ngIf="product.discount">
+                -{{ product.discount }}%
+              </div>
+              
+              <!-- Stock status -->
+              <div class="stock-status" [class.out-of-stock]="product.stock <= 0">
+                {{ product.stock > 0 ? 'Còn hàng' : 'Hết hàng' }}
+              </div>
+              
+              <!-- Quick actions -->
+              <div class="quick-actions">
+                <button mat-icon-button (click)="addToWishlist(product)" matTooltip="Thêm vào yêu thích">
+                  <mat-icon>favorite_border</mat-icon>
+                </button>
+                <button mat-icon-button (click)="quickView(product)" matTooltip="Xem nhanh">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <mat-card-content>
+              <div class="product-category">
+                <mat-chip color="primary">{{ product.brand }}</mat-chip>
+              </div>
+              
+              <h4 (click)="goToProduct(product.id)">{{ product.name }}</h4>
+              
+              <p class="product-description">{{ product.shortDescription || product.description }}</p>
+              
+              <div class="product-rating">
+                <div class="stars">
+                  <mat-icon *ngFor="let star of [1,2,3,4,5]" 
+                           [class.filled]="star <= product.rating">
+                    star
+                  </mat-icon>
+                </div>
+                <span class="rating-text">{{ product.rating }} ({{ product.reviewCount }} đánh giá)</span>
+              </div>
+              
+              <div class="product-specs">
+                <div class="spec-item" *ngFor="let spec of product.specifications | slice:0:2">
+                  <strong>{{ spec.name }}:</strong> {{ spec.value }} {{ spec.unit }}
+                </div>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <div class="price-section">
+                <div class="current-price">{{ formatPrice(product.price) }}</div>
+                <div class="original-price" *ngIf="product.originalPrice && product.discount">
+                  {{ formatPrice(product.originalPrice) }}
+                </div>
+                <div class="unit">/ {{ product.unit }}</div>
+              </div>
+              
+              <div class="action-buttons">
+                <button mat-button 
+                        color="primary" 
+                        (click)="goToProduct(product.id)"
+                        class="view-details">
+                  <mat-icon>info</mat-icon>
+                  Chi tiết
+                </button>
+                
+                <button mat-raised-button 
+                        color="primary" 
+                        (click)="addToCart(product)"
+                        [disabled]="product.stock <= 0"
+                        class="add-to-cart">
+                  <mat-icon>shopping_cart</mat-icon>
+                  Thêm vào giỏ
+                </button>
+              </div>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination-section" *ngIf="searchResult$ | async as result">
+            <mat-paginator
+              [length]="result.total"
+              [pageSize]="pageSize"
+              [pageIndex]="currentPage - 1"
+              [pageSizeOptions]="[12, 24, 48]"
+              (page)="onPageChange($event)"
+              showFirstLastButtons>
+            </mat-paginator>
+          </div>
+
+          <!-- No results -->
+          <div class="no-results" *ngIf="(searchResult$ | async)?.total === 0">
+            <mat-icon>search_off</mat-icon>
+            <h3>Không tìm thấy sản phẩm</h3>
+            <p>Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc</p>
+            <button mat-raised-button color="primary" (click)="clearFilters()">
+              <mat-icon>refresh</mat-icon>
+              Xem tất cả sản phẩm
+            </button>
+          </div>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Categories -->
+  <section class="featured-categories" *ngIf="!currentCategory">
+    <div class="container">
+      <h2>Danh Mục Nổi Bật</h2>
+      <div class="categories-grid">
+        <div class="category-card" 
+             *ngFor="let category of categories$ | async" 
+             routerLink="/products/category/{{ category.slug }}">
+          <div class="category-image">
+            <img [src]="category.image" [alt]="category.name">
+            <div class="category-overlay">
+              <mat-icon>{{ category.icon }}</mat-icon>
+            </div>
+          </div>
+          <div class="category-content">
+            <h3>{{ category.name }}</h3>
+            <p>{{ category.productCount }} sản phẩm</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

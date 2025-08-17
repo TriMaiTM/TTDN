@@ -1,0 +1,212 @@
+<div class="news-admin-container">
+  <mat-card class="news-admin-card">
+    <mat-card-header>
+      <mat-card-title>Quản Lý Tin Tức</mat-card-title>
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="initializeSampleData()">
+          <mat-icon>add_circle</mat-icon>
+          Khởi tạo dữ liệu mẫu
+        </button>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="content-layout">
+        <!-- News Form -->
+        <div class="form-section">
+          <h3>{{ isEditing ? 'Sửa Tin Tức' : 'Tạo Tin Tức Mới' }}</h3>
+          
+          <form [formGroup]="newsForm" (ngSubmit)="saveNews()" class="news-form">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Tiêu đề</mat-label>
+                <input matInput formControlName="title" placeholder="Nhập tiêu đề tin tức">
+                <mat-error *ngIf="newsForm.get('title')?.hasError('required')">
+                  Tiêu đề là bắt buộc
+                </mat-error>
+                <mat-error *ngIf="newsForm.get('title')?.hasError('minlength')">
+                  Tiêu đề phải có ít nhất 5 ký tự
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Tóm tắt</mat-label>
+                <textarea matInput formControlName="excerpt" 
+                          rows="3" placeholder="Nhập tóm tắt tin tức"></textarea>
+                <mat-error *ngIf="newsForm.get('excerpt')?.hasError('required')">
+                  Tóm tắt là bắt buộc
+                </mat-error>
+                <mat-error *ngIf="newsForm.get('excerpt')?.hasError('maxlength')">
+                  Tóm tắt không được vượt quá 200 ký tự
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nội dung</mat-label>
+                <textarea matInput formControlName="content" 
+                          rows="6" placeholder="Nhập nội dung tin tức"></textarea>
+                <mat-error *ngIf="newsForm.get('content')?.hasError('required')">
+                  Nội dung là bắt buộc
+                </mat-error>
+                <mat-error *ngIf="newsForm.get('content')?.hasError('minlength')">
+                  Nội dung phải có ít nhất 20 ký tự
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Danh mục</mat-label>
+                <mat-select formControlName="category">
+                  <mat-option *ngFor="let category of categories" [value]="category.id">
+                    {{ category.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="newsForm.get('category')?.hasError('required')">
+                  Vui lòng chọn danh mục
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Ảnh đại diện</mat-label>
+                <input matInput formControlName="featuredImage" 
+                       placeholder="URL ảnh đại diện">
+                <mat-error *ngIf="newsForm.get('featuredImage')?.hasError('required')">
+                  URL ảnh đại diện là bắt buộc
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Tags</mat-label>
+                <input matInput formControlName="tags" 
+                       placeholder="Nhập tags, cách nhau bằng dấu phẩy">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Trạng thái</mat-label>
+                <mat-select formControlName="status">
+                  <mat-option *ngFor="let status of statusOptions" [value]="status.value">
+                    {{ status.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-checkbox formControlName="featured" class="featured-checkbox">
+                Tin nổi bật
+              </mat-checkbox>
+
+              <mat-form-field appearance="outline" class="datetime-field">
+                <mat-label>Thời gian xuất bản</mat-label>
+                <input matInput type="datetime-local" formControlName="publishedAt">
+              </mat-form-field>
+            </div>
+
+            <div class="form-actions">
+              <button mat-raised-button color="primary" type="submit" 
+                      [disabled]="newsForm.invalid">
+                <mat-icon>{{ isEditing ? 'save' : 'add' }}</mat-icon>
+                {{ isEditing ? 'Cập nhật' : 'Tạo mới' }}
+              </button>
+              
+              <button mat-button type="button" (click)="clearForm()" 
+                      *ngIf="isEditing">
+                <mat-icon>cancel</mat-icon>
+                Hủy
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- News List -->
+        <div class="list-section">
+          <h3>Danh Sách Tin Tức ({{ newsList.length }})</h3>
+          
+          <div class="table-container">
+            <table mat-table [dataSource]="newsList" class="news-table">
+              <ng-container matColumnDef="title">
+                <th mat-header-cell *matHeaderCellDef>Tiêu đề</th>
+                <td mat-cell *matCellDef="let news" class="title-cell">
+                  <div class="news-title">
+                    <img *ngIf="news.featuredImage" [src]="news.featuredImage" 
+                         alt="Thumbnail" class="news-thumbnail">
+                    <div>
+                      <div class="title">{{ news.title }}</div>
+                      <div class="excerpt">{{ news.excerpt }}</div>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="category">
+                <th mat-header-cell *matHeaderCellDef>Danh mục</th>
+                <td mat-cell *matCellDef="let news">
+                  <mat-chip [style.background-color]="news.category?.color">
+                    {{ getCategoryName(news) }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Trạng thái</th>
+                <td mat-cell *matCellDef="let news">
+                  <mat-chip [class]="'status-' + news.status">
+                    {{ getStatusText(news.status) }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="featured">
+                <th mat-header-cell *matHeaderCellDef>Nổi bật</th>
+                <td mat-cell *matCellDef="let news">
+                  <mat-icon *ngIf="news.featured" color="primary">star</mat-icon>
+                  <mat-icon *ngIf="!news.featured" class="inactive">star_border</mat-icon>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="publishedAt">
+                <th mat-header-cell *matHeaderCellDef>Ngày xuất bản</th>
+                <td mat-cell *matCellDef="let news">
+                  {{ formatDate(news.publishedAt) }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Thao tác</th>
+                <td mat-cell *matCellDef="let news">
+                  <button mat-icon-button (click)="selectNews(news)" 
+                          matTooltip="Chỉnh sửa">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" (click)="deleteNews(news)"
+                          matTooltip="Xóa">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+                  class="table-row"></tr>
+            </table>
+
+            <div *ngIf="newsList.length === 0" class="no-data">
+              <mat-icon>article</mat-icon>
+              <p>Chưa có tin tức nào</p>
+              <button mat-raised-button color="primary" (click)="initializeSampleData()">
+                Khởi tạo dữ liệu mẫu
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

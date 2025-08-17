@@ -1,0 +1,137 @@
+<mat-toolbar color="primary" class="site-toolbar">
+  <div class="container toolbar-inner">
+    <div class="left">
+      <button mat-icon-button class="mobile-menu-btn" (click)="showSidenav = true">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <a class="logo" routerLink="/"><img src="assets/images/icon.png" alt="logo" height="44"></a>
+    </div>
+
+    <!-- Theme toggle -->
+    <div class="theme-toggle">
+      <mat-icon>light_mode</mat-icon>
+      <mat-slide-toggle 
+        [checked]="themeService.isDarkMode()" 
+        (change)="toggleTheme()"
+        color="accent">
+      </mat-slide-toggle>
+      <mat-icon>dark_mode</mat-icon>
+    </div>
+
+    <!-- Desktop nav -->
+    <nav class="nav-links" (mouseleave)="closeAboutSoon()">
+      <!-- Trang chủ -->
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        class="nav-item"
+        (mouseenter)="cancelClose()"
+        (mouseleave)="closeAboutSoon()"
+        >TRANG CHỦ</a
+      >
+
+      <!-- GIỚI THIỆU: label là link (click -> /about), hover hiện dropdown -->
+      <div
+        class="nav-item has-dropdown"
+        (mouseenter)="openAbout()"
+        (mouseleave)="closeAboutSoon()"
+      >
+        <a
+          routerLink="/about"
+          routerLinkActive="active"
+          class="label"
+          (click)="$event.stopPropagation()" 
+          >GIỚI THIỆU</a
+        >
+        <i class="caret">▾</i>
+
+        <!-- dropdown panel -->
+        <div
+          class="dropdown"
+          [class.show]="showAboutDropdown"
+          (mouseenter)="cancelClose()"
+          (mouseleave)="closeAboutSoon()"
+        >
+          <a routerLink="/about/story" (click)="showAboutDropdown=false">Câu chuyện của chúng tôi</a>
+          <a routerLink="/about/vision" (click)="showAboutDropdown=false">Tầm nhìn · Sứ mệnh & Giá trị</a>
+        </div>
+      </div>
+
+      <!-- Hoạt động kinh doanh -->
+      <a
+        routerLink="/business"
+        routerLinkActive="active"
+        class="nav-item"
+        (mouseenter)="cancelClose()"
+        (mouseleave)="closeAboutSoon()"
+        >HOẠT ĐỘNG KINH DOANH</a
+      >
+
+      <!-- Sản phẩm -->
+      <a
+        routerLink="/products"
+        routerLinkActive="active"
+        class="nav-item"
+        (mouseenter)="cancelClose()"
+        (mouseleave)="closeAboutSoon()"
+        >SẢN PHẨM</a
+      >
+
+      <!-- Dự án -->
+      <a
+        routerLink="/projects"
+        routerLinkActive="active"
+        class="nav-item"
+        (mouseenter)="cancelClose()"
+        (mouseleave)="closeAboutSoon()"
+        >DỰ ÁN</a
+      >
+
+      <!-- Tin tức -->
+      <a
+        routerLink="/news"
+        routerLinkActive="active"
+        class="nav-item"
+        (mouseenter)="cancelClose()"
+        (mouseleave)="closeAboutSoon()"
+        >TIN TỨC</a
+      >
+
+      <!-- Liên hệ (nút) -->
+      <a mat-raised-button color="accent" routerLink="/contact" class="nav-item contact-btn"
+         (mouseenter)="cancelClose()" (mouseleave)="closeAboutSoon()">LIÊN HỆ</a>
+
+      <!-- Admin (chỉ hiện khi cần thiết) -->
+      <a 
+        routerLink="/admin" 
+        class="nav-item admin-link"
+        title="Admin Panel"
+        (mouseenter)="cancelClose()" 
+        (mouseleave)="closeAboutSoon()">
+        <mat-icon>admin_panel_settings</mat-icon>
+      </a>
+    </nav>
+  </div>
+</mat-toolbar>
+
+<!-- Mobile sidenav (unchanged) -->
+<mat-sidenav-container class="mobile-sidenav">
+  <mat-sidenav [(opened)]="showSidenav" mode="over" position="start">
+    <mat-nav-list>
+      <a mat-list-item routerLink="/" (click)="showSidenav=false">Trang chủ</a>
+
+      <mat-list-item>
+        <div class="sidenav-about-title">Giới thiệu</div>
+      </mat-list-item>
+      <a mat-list-item class="sublink" routerLink="/about/story" (click)="showSidenav=false">— Câu chuyện của chúng tôi</a>
+      <a mat-list-item class="sublink" routerLink="/about/vision" (click)="showSidenav=false">— Tầm nhìn & Sứ mệnh</a>
+
+      <a mat-list-item routerLink="/business" (click)="showSidenav=false">Hoạt động kinh doanh</a>
+      <a mat-list-item routerLink="/products" (click)="showSidenav=false">Sản phẩm</a>
+      <a mat-list-item routerLink="/projects" (click)="showSidenav=false">Dự án</a>
+      <a mat-list-item routerLink="/news" (click)="showSidenav=false">Tin tức</a>
+      <a mat-list-item routerLink="/contact" (click)="showSidenav=false">Liên hệ</a>
+      <a mat-list-item routerLink="/admin" (click)="showSidenav=false">⚙️ Admin Panel</a>
+    </mat-nav-list>
+  </mat-sidenav>
+</mat-sidenav-container>

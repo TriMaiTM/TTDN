@@ -1,0 +1,364 @@
+<div class="home-container">
+  <!-- Slider Section - Giữ nguyên như yêu cầu -->
+  <app-slider></app-slider>
+
+  <!-- Welcome Section -->
+  <section class="welcome-section">
+    <div class="container">
+      <div class="welcome-content">
+        <div class="welcome-text">
+          <h2>Chào Mừng Đến Với PHƯỚC TRƯỜNG SANH</h2>
+          <p class="lead">
+            Công ty Cổ phần Thương mại Đầu tư Xây dựng PHƯỚC TRƯỜNG SANH - 
+            Đơn vị tiên phong trong lĩnh vực xây dựng và phát triển bất động sản 
+            tại khu vực miền Trung với hơn 15 năm kinh nghiệm.
+          </p>
+          <div class="welcome-features">
+            <div class="feature-item">
+              <mat-icon>verified</mat-icon>
+              <span>Chất lượng được kiểm định</span>
+            </div>
+            <div class="feature-item">
+              <mat-icon>schedule</mat-icon>
+              <span>Bàn giao đúng tiến độ</span>
+            </div>
+            <div class="feature-item">
+              <mat-icon>support_agent</mat-icon>
+              <span>Hỗ trợ khách hàng 24/7</span>
+            </div>
+          </div>
+          <div class="welcome-actions">
+            <button mat-raised-button color="primary" routerLink="/about">
+              <mat-icon>info</mat-icon>
+              Về Chúng Tôi
+            </button>
+            <button mat-stroked-button routerLink="/contact">
+              <mat-icon>contact_phone</mat-icon>
+              Liên Hệ Ngay
+            </button>
+          </div>
+        </div>
+        <div class="welcome-image">
+          <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+               alt="Công ty PHƯỚC TRƯỜNG SANH">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="container">
+      <h2>Thành Tựu Đạt Được</h2>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-icon">
+            <mat-icon>construction</mat-icon>
+          </div>
+          <div class="stat-number">{{ company?.stats?.running || 15 }}+</div>
+          <div class="stat-label">Dự án đang thực hiện</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">
+            <mat-icon>apartment</mat-icon>
+          </div>
+          <div class="stat-number">{{ company?.stats?.projects || 120 }}+</div>
+          <div class="stat-label">Dự án hoàn thành</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">
+            <mat-icon>groups</mat-icon>
+          </div>
+          <div class="stat-number">{{ company?.stats?.staff || 50 }}+</div>
+          <div class="stat-label">Chuyên gia kinh nghiệm</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">
+            <mat-icon>thumb_up</mat-icon>
+          </div>
+          <div class="stat-number">{{ company?.stats?.clients || 200 }}+</div>
+          <div class="stat-label">Khách hàng hài lòng</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Dịch Vụ & Sản Phẩm</h2>
+        <p>Cung cấp giải pháp xây dựng toàn diện từ A-Z</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card" routerLink="/products/category/vat-lieu-xay-dung">
+          <div class="service-icon">
+            <mat-icon>construction</mat-icon>
+          </div>
+          <h3>Vật Liệu Xây Dựng</h3>
+          <p>Xi măng, thép, gạch và các vật liệu xây dựng chất lượng cao từ các thương hiệu uy tín</p>
+          <div class="service-features">
+            <mat-chip>Xi măng</mat-chip>
+            <mat-chip>Thép xây dựng</mat-chip>
+            <mat-chip>Gạch block</mat-chip>
+          </div>
+        </div>
+        
+        <div class="service-card" routerLink="/products/category/thiet-bi-may-moc">
+          <div class="service-icon">
+            <mat-icon>build</mat-icon>
+          </div>
+          <h3>Thiết Bị & Máy Móc</h3>
+          <p>Máy khoan, máy cắt, máy trộn và các thiết bị thi công chuyên nghiệp</p>
+          <div class="service-features">
+            <mat-chip>Máy khoan</mat-chip>
+            <mat-chip>Máy cắt</mat-chip>
+            <mat-chip>Máy trộn</mat-chip>
+          </div>
+        </div>
+
+        <div class="service-card" routerLink="/business/design">
+          <div class="service-icon">
+            <mat-icon>architecture</mat-icon>
+          </div>
+          <h3>Tư Vấn Thiết Kế</h3>
+          <p>Thiết kế kiến trúc và kết cấu sáng tạo, phù hợp với nhu cầu khách hàng</p>
+          <div class="service-features">
+            <mat-chip>Kiến trúc</mat-chip>
+            <mat-chip>Kết cấu</mat-chip>
+            <mat-chip>Nội thất</mat-chip>
+          </div>
+        </div>
+
+        <div class="service-card" routerLink="/products/category/thiet-bi-dien">
+          <div class="service-icon">
+            <mat-icon>electrical_services</mat-icon>
+          </div>
+          <h3>Thiết Bị Điện</h3>
+          <p>Dây điện, ổ cắm, công tắc và các thiết bị điện an toàn, tiêu chuẩn cao</p>
+          <div class="service-features">
+            <mat-chip>Dây điện</mat-chip>
+            <mat-chip>Ổ cắm</mat-chip>
+            <mat-chip>Công tắc</mat-chip>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products Section -->
+  <section class="featured-products-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Sản Phẩm Nổi Bật</h2>
+        <p>Những sản phẩm chất lượng cao được khách hàng tin tưởng</p>
+      </div>
+      
+      <div class="products-grid">
+        <div class="product-card" *ngFor="let product of featuredProducts">
+          <div class="product-image">
+            <img [src]="product.images[0]" [alt]="product.name">
+            <div class="discount-badge" *ngIf="product.discount">
+              -{{ product.discount }}%
+            </div>
+          </div>
+          <div class="product-content">
+            <mat-chip color="primary" class="brand-chip">{{ product.brand }}</mat-chip>
+            <h3>{{ product.name }}</h3>
+            <div class="product-rating">
+              <div class="stars">
+                <mat-icon *ngFor="let star of [1,2,3,4,5]" [class.filled]="star <= product.rating">star</mat-icon>
+              </div>
+              <span>({{ product.reviewCount }})</span>
+            </div>
+            <div class="price-section">
+              <div class="current-price">{{ formatPrice(product.price) }}</div>
+              <div class="original-price" *ngIf="product.originalPrice && product.discount">
+                {{ formatPrice(product.originalPrice) }}
+              </div>
+            </div>
+            <div class="product-actions">
+              <button mat-stroked-button color="primary" (click)="goToProduct(product.id)">
+                <mat-icon>visibility</mat-icon>
+                Xem chi tiết
+              </button>
+              <button mat-raised-button color="primary" (click)="addToCart(product)">
+                <mat-icon>shopping_cart</mat-icon>
+                Thêm vào giỏ
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-footer">
+        <button mat-stroked-button routerLink="/products" color="primary">
+          <mat-icon>arrow_forward</mat-icon>
+          Xem Tất Cả Sản Phẩm
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Projects Section -->
+  <section class="projects-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Dự Án Tiêu Biểu</h2>
+        <p>Những công trình nổi bật thể hiện năng lực và kinh nghiệm của chúng tôi</p>
+      </div>
+      
+      <div class="featured-project" *ngIf="projects && projects.length > 0">
+        <div class="featured-content">
+          <div class="featured-text">
+            <mat-chip color="primary">Dự án nổi bật</mat-chip>
+            <h3>{{ projects[0]?.name }}</h3>
+            <div class="project-meta">
+              <span>
+                <mat-icon>location_on</mat-icon>
+                {{ projects[0]?.location }}
+              </span>
+              <span>
+                <mat-icon>calendar_today</mat-icon>
+                {{ projects[0]?.year }}
+              </span>
+            </div>
+            <p>{{ projects[0]?.desc }}</p>
+            <button mat-raised-button color="primary" routerLink="/projects">
+              <mat-icon>visibility</mat-icon>
+              Xem Chi Tiết
+            </button>
+          </div>
+          <div class="featured-image">
+            <img [src]="projects[0]?.cover" [alt]="projects[0]?.name">
+          </div>
+        </div>
+      </div>
+
+      <div class="projects-grid">
+        <mat-card *ngFor="let project of projects?.slice(1, 4)" class="project-card">
+          <div class="card-image">
+            <img mat-card-image [src]="project.cover" [alt]="project.name">
+          </div>
+          <mat-card-content>
+            <h4>{{ project.name }}</h4>
+            <div class="project-meta">
+              <span>
+                <mat-icon>location_on</mat-icon>
+                {{ project.location }}
+              </span>
+              <span>
+                <mat-icon>calendar_today</mat-icon>
+                {{ project.year }}
+              </span>
+            </div>
+            <p>{{ project.desc }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button>
+              <mat-icon>visibility</mat-icon>
+              Chi tiết
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+      <div class="section-footer">
+        <button mat-stroked-button routerLink="/projects" color="primary">
+          <mat-icon>arrow_forward</mat-icon>
+          Xem Tất Cả Dự Án
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- News Section -->
+  <section class="news-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Tin Tức & Sự Kiện</h2>
+        <p>Cập nhật thông tin mới nhất về hoạt động của công ty</p>
+      </div>
+
+      <div class="news-grid">
+        <div class="news-card main-news" *ngIf="news && news.length > 0">
+          <div class="news-image">
+            <img [src]="news[0]?.image" [alt]="news[0]?.title">
+            <mat-chip color="accent">Tin nổi bật</mat-chip>
+          </div>
+          <div class="news-content">
+            <h3>{{ news[0]?.title }}</h3>
+            <div class="news-meta">
+              <span>
+                <mat-icon>schedule</mat-icon>
+                {{ news[0]?.date }}
+              </span>
+            </div>
+            <p>{{ news[0]?.excerpt }}</p>
+            <button mat-button color="primary">
+              <mat-icon>read_more</mat-icon>
+              Đọc thêm
+            </button>
+          </div>
+        </div>
+
+        <div class="side-news">
+          <div class="news-item" *ngFor="let item of news?.slice(1, 4)">
+            <img [src]="item.image" [alt]="item.title">
+            <div class="item-content">
+              <h4>{{ item.title }}</h4>
+              <span class="date">{{ item.date }}</span>
+              <p>{{ item.excerpt }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-footer">
+        <button mat-stroked-button routerLink="/news" color="primary">
+          <mat-icon>arrow_forward</mat-icon>
+          Xem Tất Cả Tin Tức
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <div class="cta-text">
+          <h2>Bắt Đầu Dự Án Của Bạn Ngay Hôm Nay</h2>
+          <p>
+            Liên hệ với chúng tôi để được tư vấn miễn phí và nhận báo giá chi tiết 
+            cho dự án xây dựng của bạn. Đội ngũ chuyên gia sẵn sàng hỗ trợ 24/7.
+          </p>
+          <div class="cta-features">
+            <div class="cta-feature">
+              <mat-icon>phone</mat-icon>
+              <span>Tư vấn miễn phí</span>
+            </div>
+            <div class="cta-feature">
+              <mat-icon>calculate</mat-icon>
+              <span>Báo giá nhanh chóng</span>
+            </div>
+            <div class="cta-feature">
+              <mat-icon>schedule</mat-icon>
+              <span>Hỗ trợ 24/7</span>
+            </div>
+          </div>
+        </div>
+        <div class="cta-actions">
+          <button mat-raised-button color="primary" routerLink="/contact">
+            <mat-icon>contact_phone</mat-icon>
+            Liên Hệ Ngay
+          </button>
+          <button mat-stroked-button routerLink="/projects">
+            <mat-icon>folder_open</mat-icon>
+            Xem Portfolio
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

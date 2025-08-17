@@ -1,1 +1,258 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+/* CSS Variables for theming */
+:root {
+  /* Light theme colors */
+  --bg-primary: #fafafa;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f8f9fa;
+  --text-primary: #222;
+  --text-secondary: #666;
+  --text-muted: #999;
+  --border-color: #eee;
+  --card-bg: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --accent-yellow: #caa84a;
+  --accent-blue: #667eea;
+  --accent-purple: #764ba2;
+  --nav-text: #111;
+  --menu-border: #0f6b66;
+  --header-bg: #ffffff;
+  --dropdown-bg: #ffffff;
+  --primary-color: #0f6b66;
+  --accent-color: #caa84a;
+  /* Hero section colors for light mode */
+  --hero-text: #ffffff;
+  --hero-text-secondary: rgba(255, 255, 255, 0.9);
+}
+
+/* Dark theme colors */
+.dark-theme {
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #21262d;
+  --text-primary: #f0f6fc;
+  --text-secondary: #7d8590;
+  --text-muted: #656d76;
+  --border-color: #30363d;
+  --card-bg: #161b22;
+  --shadow: rgba(0, 0, 0, 0.4);
+  --accent-yellow: #ffd700;
+  --accent-blue: #58a6ff;
+  --accent-purple: #bc8cff;
+  --nav-text: #f0f6fc;
+  --menu-border: #ffd700;
+  --header-bg: #161b22;
+  --dropdown-bg: #21262d;
+  --primary-color: #58a6ff;
+  --accent-color: #ffd700;
+  /* Hero section colors for dark mode */
+  --hero-text: #f0f6fc;
+  --hero-text-secondary: rgba(240, 246, 252, 0.8);
+}
+
+* { box-sizing: border-box; }
+
+body { 
+  font-family: 'Inter', sans-serif; 
+  margin: 0; 
+  color: var(--text-primary); 
+  background: var(--bg-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container { max-width:1200px; margin:0 auto; padding:0 16px; }
+a { color:inherit; text-decoration:none; }
+
+h1, h2, h3, h4 { 
+  color: var(--text-primary); 
+  margin: 0 0 12px 0; 
+}
+
+p {
+  color: var(--text-secondary);
+}
+
+/* Ensure hero sections always have proper contrast */
+[class*="hero"], [class*="Hero"] {
+  h1, h2, h3, h4 {
+    color: var(--hero-text) !important;
+  }
+  
+  p, .lead, .subtitle {
+    color: var(--hero-text-secondary) !important;
+  }
+  
+  a {
+    color: var(--hero-text) !important;
+    
+    &:hover {
+      color: var(--hero-text-secondary) !important;
+    }
+  }
+}
+
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 12px; }
+.text-center { text-align:center; }
+
+/* Material Design component theming for dark mode */
+.dark-theme {
+  /* Ensure all text inherits theme colors */
+  * {
+    transition: color 0.3s ease, background-color 0.3s ease;
+  }
+  
+  /* Material Cards */
+  .mat-mdc-card {
+    background: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color);
+  }
+
+  /* Material Buttons */
+  .mat-mdc-raised-button {
+    &.mat-primary {
+      background: var(--accent-blue) !important;
+      color: white !important;
+    }
+    
+    &.mat-accent {
+      background: var(--accent-yellow) !important;
+      color: #121212 !important;
+    }
+  }
+
+  .mat-mdc-outlined-button {
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+  }
+
+  /* Material Toolbar */
+  .mat-toolbar {
+    background: var(--header-bg) !important;
+    color: var(--text-primary) !important;
+  }
+
+  /* Material Icons */
+  .mat-icon {
+    color: var(--text-primary);
+  }
+
+  /* Material Sidenav */
+  .mat-drawer {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+  }
+
+  .mat-nav-list .mat-list-item {
+    color: var(--text-primary) !important;
+  }
+
+  /* Material Form Fields */
+  .mat-mdc-form-field {
+    .mat-mdc-text-field-wrapper {
+      background: var(--bg-secondary) !important;
+    }
+    
+    .mat-mdc-form-field-label {
+      color: var(--text-secondary) !important;
+    }
+    
+    .mat-mdc-input-element {
+      color: var(--text-primary) !important;
+    }
+    
+    .mat-mdc-form-field-bottom-align::before {
+      border-bottom-color: var(--border-color) !important;
+    }
+  }
+
+  /* Material Select */
+  .mat-mdc-select {
+    color: var(--text-primary) !important;
+  }
+
+  .mat-mdc-select-panel {
+    background: var(--bg-secondary) !important;
+  }
+
+  .mat-mdc-option {
+    color: var(--text-primary) !important;
+    
+    &:hover {
+      background: var(--bg-tertiary) !important;
+    }
+  }
+
+  /* Material Input */
+  .mat-mdc-input-element::placeholder {
+    color: var(--text-muted) !important;
+  }
+
+  /* Scrollbar for dark mode */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+  }
+
+  /* Text selection */
+  ::selection {
+    background: var(--accent-yellow);
+    color: #121212;
+  }
+
+  /* Links */
+  a {
+    color: var(--accent-blue);
+    
+    &:hover {
+      color: var(--accent-yellow);
+    }
+  }
+}
+
+/* Light theme specific overrides */
+body:not(.dark-theme) {
+  /* Ensure proper contrast in light mode */
+  .mat-mdc-card {
+    background: var(--card-bg) !important;
+    color: var(--text-primary) !important;
+  }
+  
+  .mat-icon {
+    color: var(--text-primary);
+  }
+  
+  /* Ensure all text elements use theme colors */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary) !important;
+  }
+  
+  p, span, div {
+    color: var(--text-secondary);
+  }
+  
+  /* Make sure hero sections have proper contrast */
+  [class*="hero"] {
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--hero-text) !important;
+    }
+    
+    p, .lead, .subtitle, .hero-subtitle, .hero-description {
+      color: var(--hero-text-secondary) !important;
+    }
+  }
+}

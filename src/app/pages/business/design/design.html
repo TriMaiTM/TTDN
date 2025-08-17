@@ -1,0 +1,80 @@
+<div class="design-page">
+  <!-- Hero section -->
+  <section class="hero">
+    <div class="container">
+      <h1>Tư VẤN THIẾT KẾ</h1>
+      <p class="lead">Dịch vụ thiết kế kiến trúc, kết cấu và nội thất chuyên nghiệp</p>
+    </div>
+  </section>
+
+  <!-- Services section -->
+  <section class="services container">
+    <h2>DỊCH VỤ THIẾT KẾ</h2>
+    <div class="services-grid">
+      <mat-card *ngFor="let service of services" class="service-card">
+        <mat-card-header>
+          <div mat-card-avatar class="service-avatar">
+            <mat-icon>{{ service.icon }}</mat-icon>
+          </div>
+          <mat-card-title>{{ service.title }}</mat-card-title>
+          <mat-card-subtitle>{{ service.description }}</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <ul class="feature-list">
+            <li *ngFor="let feature of service.features">
+              <mat-icon>check_circle</mat-icon>
+              {{ feature }}
+            </li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- Process section -->
+  <section class="process">
+    <div class="container">
+      <h2>QUY TRÌNH THIẾT KẾ</h2>
+      <div class="process-steps">
+        <div *ngFor="let step of process" class="process-step">
+          <div class="step-number">{{ step.step }}</div>
+          <div class="step-content">
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects showcase -->
+  <section class="projects container">
+    <h2>DỰ ÁN THIẾT KẾ TIÊU BIỂU</h2>
+    <div class="projects-grid">
+      <mat-card *ngFor="let project of projects" class="project-card">
+        <img mat-card-image [src]="project.image" [alt]="project.name">
+        <mat-card-content>
+          <h3>{{ project.name }}</h3>
+          <div class="project-info">
+            <p><mat-icon>location_on</mat-icon> {{ project.location }}</p>
+            <p><mat-icon>square_foot</mat-icon> {{ project.area }}</p>
+            <p><mat-icon>palette</mat-icon> {{ project.style }}</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- Call to action -->
+  <section class="cta">
+    <div class="container">
+      <h2>Bạn cần tư vấn thiết kế?</h2>
+      <p>Liên hệ với chúng tôi để được tư vấn miễn phí</p>
+      <div class="cta-buttons">
+        <button mat-raised-button color="primary" routerLink="/contact">LIÊN HỆ TƯ VẤN</button>
+        <button mat-stroked-button routerLink="/projects">XEM THÊM DỰ ÁN</button>
+      </div>
+    </div>
+  </section>
+</div>

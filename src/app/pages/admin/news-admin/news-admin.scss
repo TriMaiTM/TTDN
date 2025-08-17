@@ -1,0 +1,256 @@
+.news-admin-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .news-admin-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+
+    mat-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+
+      .header-actions {
+        margin-left: auto;
+      }
+    }
+  }
+
+  .content-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 24px;
+
+    @media (max-width: 1200px) {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+
+  // Form Styles
+  .form-section {
+    h3 {
+      margin: 0 0 20px 0;
+      color: var(--text-primary);
+      font-size: 18px;
+      font-weight: 500;
+    }
+  }
+
+  .form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    .full-width {
+      flex: 1;
+    }
+
+    .half-width {
+      flex: 0 0 calc(50% - 8px);
+    }
+
+    .featured-checkbox {
+      flex: 0 0 calc(50% - 8px);
+      margin-top: 12px;
+    }
+
+    .datetime-field {
+      flex: 0 0 calc(50% - 8px);
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+
+      .half-width, .featured-checkbox, .datetime-field {
+        flex: 1;
+      }
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+
+    @media (max-width: 768px) {
+      justify-content: stretch;
+
+      button {
+        flex: 1;
+      }
+    }
+  }
+
+  // Table Styles
+  .list-section {
+    h3 {
+      margin: 0 0 20px 0;
+      color: var(--text-primary);
+      font-size: 18px;
+      font-weight: 500;
+    }
+  }
+
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+  }
+
+  .news-table {
+    width: 100%;
+
+    .mat-column-title {
+      width: 40%;
+    }
+
+    .mat-column-category {
+      width: 15%;
+    }
+
+    .mat-column-status {
+      width: 12%;
+    }
+
+    .mat-column-featured {
+      width: 8%;
+      text-align: center;
+    }
+
+    .mat-column-publishedAt {
+      width: 15%;
+    }
+
+    .mat-column-actions {
+      width: 10%;
+      text-align: center;
+    }
+
+    .table-row:hover {
+      background-color: var(--hover-background);
+    }
+  }
+
+  .news-title {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+
+    .news-thumbnail {
+      width: 60px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .title {
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+
+    .excerpt {
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+
+  // Status Chips
+  mat-chip {
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 12px;
+    
+    &.status-draft {
+      background-color: #FFC107 !important;
+      color: #000 !important;
+    }
+
+    &.status-published {
+      background-color: #4CAF50 !important;
+      color: #fff !important;
+    }
+
+    &.status-archived {
+      background-color: #9E9E9E !important;
+      color: #fff !important;
+    }
+  }
+
+  .inactive {
+    color: var(--text-disabled) !important;
+  }
+
+  // No Data State
+  .no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    text-align: center;
+    color: var(--text-secondary);
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    p {
+      margin: 0 0 24px 0;
+      font-size: 16px;
+    }
+  }
+
+  // Material overrides
+  mat-form-field {
+    .mat-mdc-form-field-subscript-wrapper {
+      margin-top: 4px;
+    }
+  }
+
+  mat-icon-button {
+    &.mat-warn {
+      color: #f44336;
+    }
+  }
+}
+
+// Dark theme adjustments
+[data-theme="dark"] .news-admin-container {
+  .news-admin-card {
+    background-color: var(--card-background);
+    color: var(--text-primary);
+  }
+
+  .news-table {
+    background-color: var(--card-background);
+    color: var(--text-primary);
+  }
+
+  mat-form-field {
+    .mat-mdc-form-field-outline {
+      color: var(--border-color);
+    }
+  }
+}

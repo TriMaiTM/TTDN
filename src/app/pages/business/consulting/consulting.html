@@ -1,0 +1,78 @@
+<div class="consulting-page">
+  <!-- Hero section -->
+  <section class="hero">
+    <div class="container">
+      <h1>TƯ VẤN THIẾT KẾ</h1>
+      <p class="lead">Sáng tạo - Chuyên nghiệp - Bền vững</p>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="services container">
+    <h2>Dịch vụ tư vấn thiết kế</h2>
+    <div class="services-grid">
+      <mat-card *ngFor="let service of services" class="service-card">
+        <mat-card-header>
+          <div mat-card-avatar class="service-avatar">
+            <mat-icon>{{ service.icon }}</mat-icon>
+          </div>
+          <mat-card-title>{{ service.title }}</mat-card-title>
+          <mat-card-subtitle>{{ service.description }}</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <h4>Tính năng chính:</h4>
+          <ul class="feature-list">
+            <li *ngFor="let feature of service.features">
+              <mat-icon>check_circle</mat-icon>
+              <span>{{ feature }}</span>
+            </li>
+          </ul>
+        </mat-card-content>
+        
+        <mat-card-actions>
+          <button mat-button color="primary">TÌM HIỂU THÊM</button>
+          <button mat-raised-button color="accent">LIÊN HỆ TƯ VẤN</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="process">
+    <div class="container">
+      <h2>Quy trình làm việc</h2>
+      <div class="process-steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Khảo sát & Phân tích</h3>
+          <p>Khảo sát thực địa, phân tích yêu cầu và điều kiện</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Ý tưởng & Concept</h3>
+          <p>Phát triển ý tưởng thiết kế và concept tổng thể</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Thiết kế sơ bộ</h3>
+          <p>Thực hiện thiết kế sơ bộ và phối cảnh 3D</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Hoàn thiện hồ sơ</h3>
+          <p>Hoàn thiện bản vẽ thi công và hồ sơ pháp lý</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to action -->
+  <section class="cta">
+    <div class="container">
+      <h2>Cần tư vấn thiết kế?</h2>
+      <p>Đội ngũ kiến trúc sư giàu kinh nghiệm sẵn sàng hỗ trợ bạn</p>
+      <button mat-raised-button color="accent" routerLink="/contact">LIÊN HỆ NGAY</button>
+    </div>
+  </section>
+</div>

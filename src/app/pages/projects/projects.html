@@ -1,0 +1,292 @@
+<div class="projects-container">
+  <!-- Hero Section -->
+  <section class="projects-hero">
+    <div class="hero-content">
+      <h1>DỰ ÁN TIÊU BIỂU</h1>
+      <p class="hero-subtitle">Những công trình chất lượng cao được PHƯỚC TRƯỜNG SANH thi công và hoàn thiện</p>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <mat-icon>apartment</mat-icon>
+          <div class="stat-content">
+            <div class="stat-number">50+</div>
+            <div class="stat-label">Dự án hoàn thành</div>
+          </div>
+        </div>
+        <div class="stat-item">
+          <mat-icon>construction</mat-icon>
+          <div class="stat-content">
+            <div class="stat-number">15</div>
+            <div class="stat-label">Dự án đang thi công</div>
+          </div>
+        </div>
+        <div class="stat-item">
+          <mat-icon>location_city</mat-icon>
+          <div class="stat-content">
+            <div class="stat-number">8</div>
+            <div class="stat-label">Tỉnh thành</div>
+          </div>
+        </div>
+        <div class="stat-item">
+          <mat-icon>groups</mat-icon>
+          <div class="stat-content">
+            <div class="stat-number">1000+</div>
+            <div class="stat-label">Khách hàng hài lòng</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Projects -->
+  <section class="featured-projects">
+    <div class="container">
+      <h2>Dự Án Nổi Bật</h2>
+      <div class="featured-grid">
+        <div class="featured-project">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                 alt="Khu phức hợp Indochina Plaza">
+            <div class="project-overlay">
+              <mat-chip-set>
+                <mat-chip>Thương mại</mat-chip>
+                <mat-chip>Văn phòng</mat-chip>
+              </mat-chip-set>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Khu Phức Hợp Indochina Plaza</h3>
+            <p class="project-location">
+              <mat-icon>location_on</mat-icon>
+              Quận Hải Châu, Đà Nẵng
+            </p>
+            <p class="project-desc">
+              Dự án quy mô lớn kết hợp trung tâm thương mại, văn phòng và khu vui chơi giải trí. 
+              Tổng diện tích 50,000m² với 40 tầng cao ốc hiện đại.
+            </p>
+            <div class="project-details">
+              <div class="detail-item">
+                <mat-icon>calendar_today</mat-icon>
+                <span>2020 - 2022</span>
+              </div>
+              <div class="detail-item">
+                <mat-icon>square_foot</mat-icon>
+                <span>50,000m²</span>
+              </div>
+              <div class="detail-item">
+                <mat-icon>monetization_on</mat-icon>
+                <span>850 tỷ VNĐ</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="featured-project">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                 alt="Khu dân cư Hòa Xuân">
+            <div class="project-overlay">
+              <mat-chip-set>
+                <mat-chip>Dân dư</mat-chip>
+                <mat-chip>Nhà ở</mat-chip>
+              </mat-chip-set>
+            </div>
+          </div>
+          <div class="project-info">
+            <h3>Khu Dân Cư Hòa Xuân</h3>
+            <p class="project-location">
+              <mat-icon>location_on</mat-icon>
+              Quận Cẩm Lệ, Đà Nẵng
+            </p>
+            <p class="project-desc">
+              Khu dân cư cao cấp với 200 căn nhà liền kề và biệt thự. 
+              Thiết kế hiện đại, đầy đủ tiện ích và cảnh quan xanh.
+            </p>
+            <div class="project-details">
+              <div class="detail-item">
+                <mat-icon>calendar_today</mat-icon>
+                <span>2018 - 2020</span>
+              </div>
+              <div class="detail-item">
+                <mat-icon>home</mat-icon>
+                <span>200 căn</span>
+              </div>
+              <div class="detail-item">
+                <mat-icon>monetization_on</mat-icon>
+                <span>320 tỷ VNĐ</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- All Projects -->
+  <section class="all-projects">
+    <div class="container">
+      <h2>Tất Cả Dự Án</h2>
+      <div class="projects-grid">
+        <mat-card *ngFor="let p of projects" class="project-card">
+          <div class="card-image">
+            <img mat-card-image [src]="p.cover" [alt]="p.name">
+            <div class="image-overlay">
+              <button mat-fab color="primary" class="view-btn">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </div>
+          </div>
+          <mat-card-content>
+            <h3>{{p.name}}</h3>
+            <p class="project-location">
+              <mat-icon>location_on</mat-icon>
+              {{p.location}} • {{p.year}}
+            </p>
+            <p class="project-description">{{p.desc}}</p>
+            <div class="project-tags" *ngIf="p.tags">
+              <mat-chip-set>
+                <mat-chip *ngFor="let tag of p.tags">{{tag}}</mat-chip>
+              </mat-chip-set>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button color="primary">
+              <mat-icon>info</mat-icon>
+              Chi tiết
+            </button>
+            <button mat-button>
+              <mat-icon>photo_library</mat-icon>
+              Hình ảnh
+            </button>
+          </mat-card-actions>
+        </mat-card>
+
+        <!-- Additional mock projects if data is empty -->
+        <mat-card class="project-card" *ngIf="projects.length === 0">
+          <div class="card-image">
+            <img mat-card-image src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                 alt="Nhà máy sản xuất ABC">
+            <div class="image-overlay">
+              <button mat-fab color="primary" class="view-btn">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </div>
+          </div>
+          <mat-card-content>
+            <h3>Nhà Máy Sản Xuất ABC</h3>
+            <p class="project-location">
+              <mat-icon>location_on</mat-icon>
+              Quảng Nam • 2023
+            </p>
+            <p class="project-description">Nhà máy sản xuất hiện đại với quy mô 10,000m², áp dụng công nghệ tiên tiến và thân thiện môi trường.</p>
+            <div class="project-tags">
+              <mat-chip-set>
+                <mat-chip>Công nghiệp</mat-chip>
+                <mat-chip>Xanh</mat-chip>
+              </mat-chip-set>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button color="primary">
+              <mat-icon>info</mat-icon>
+              Chi tiết
+            </button>
+            <button mat-button>
+              <mat-icon>photo_library</mat-icon>
+              Hình ảnh
+            </button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card class="project-card" *ngIf="projects.length === 0">
+          <div class="card-image">
+            <img mat-card-image src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                 alt="Trường học Sunshine">
+            <div class="image-overlay">
+              <button mat-fab color="primary" class="view-btn">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </div>
+          </div>
+          <mat-card-content>
+            <h3>Trường Học Sunshine</h3>
+            <p class="project-location">
+              <mat-icon>location_on</mat-icon>
+              Thừa Thiên Huế • 2022
+            </p>
+            <p class="project-description">Khuôn viên trường học hiện đại với 30 phòng học, khu thể thao và sân chơi an toàn cho học sinh.</p>
+            <div class="project-tags">
+              <mat-chip-set>
+                <mat-chip>Giáo dục</mat-chip>
+                <mat-chip>Công cộng</mat-chip>
+              </mat-chip-set>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button color="primary">
+              <mat-icon>info</mat-icon>
+              Chi tiết
+            </button>
+            <button mat-button>
+              <mat-icon>photo_library</mat-icon>
+              Hình ảnh
+            </button>
+          </mat-card-actions>
+        </mat-card>
+
+        <mat-card class="project-card" *ngIf="projects.length === 0">
+          <div class="card-image">
+            <img mat-card-image src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                 alt="Biệt thự Green Valley">
+            <div class="image-overlay">
+              <button mat-fab color="primary" class="view-btn">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </div>
+          </div>
+          <mat-card-content>
+            <h3>Biệt Thự Green Valley</h3>
+            <p class="project-location">
+              <mat-icon>location_on</mat-icon>
+              Quảng Ngãi • 2023
+            </p>
+            <p class="project-description">Khu biệt thự cao cấp với thiết kế sang trọng, được bao quanh bởi cảnh quan thiên nhiên tuyệt đẹp.</p>
+            <div class="project-tags">
+              <mat-chip-set>
+                <mat-chip>Biệt thự</mat-chip>
+                <mat-chip>Cao cấp</mat-chip>
+              </mat-chip-set>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button color="primary">
+              <mat-icon>info</mat-icon>
+              Chi tiết
+            </button>
+            <button mat-button>
+              <mat-icon>photo_library</mat-icon>
+              Hình ảnh
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact CTA -->
+  <section class="contact-cta">
+    <div class="container">
+      <h2>Có Dự Án Cần Tư Vấn?</h2>
+      <p>Liên hệ với chúng tôi để được tư vấn miễn phí và báo giá chi tiết</p>
+      <button mat-raised-button color="primary" class="cta-button">
+        <mat-icon>phone</mat-icon>
+        Liên Hệ Ngay
+      </button>
+    </div>
+  </section>
+</div>

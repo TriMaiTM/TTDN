@@ -1,0 +1,121 @@
+:host {
+  .site-footer {
+    background: #0f6b66;
+    color: #fff;
+    padding: 32px 0;
+    transition: background-color 0.3s ease;
+    
+    .footer-grid { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr 1fr; 
+      gap: 24px; 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      padding: 0 16px; 
+    }
+    
+    .col {
+      padding: 16px;
+    }
+    
+    img {
+      margin-bottom: 12px;
+      filter: brightness(1.1);
+    }
+    
+    h4 { 
+      margin-bottom: 16px;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 1.1rem;
+      border-bottom: 2px solid #26a69a;
+      padding-bottom: 8px;
+      display: inline-block;
+    }
+    
+    p {
+      color: #e0f2f1;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      
+      li {
+        margin-bottom: 6px;
+      }
+    }
+    
+    a { 
+      color: #e0f2f1; 
+      text-decoration: none;
+      transition: color 0.3s ease;
+      
+      &:hover {
+        color: var(--accent-yellow);
+      }
+    }
+    
+    .copyright { 
+      text-align: center; 
+      padding: 12px 0; 
+      background: rgba(0,0,0,0.1); 
+      margin-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      color: #b2dfdb;
+    }
+  }
+}
+
+/* Dark theme footer adjustments */
+:host-context(.dark-theme) {
+  .site-footer {
+    background: #0d1117 !important;
+    border-top: 2px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    
+    .col {
+      background: var(--bg-secondary) !important;
+      border-radius: 8px !important;
+      border: 1px solid var(--border-color) !important;
+    }
+    
+    img {
+      filter: brightness(1.3) contrast(1.1) !important;
+    }
+    
+    h4 {
+      color: var(--text-primary) !important;
+      border-bottom-color: var(--accent-yellow) !important;
+    }
+    
+    p {
+      color: var(--text-secondary) !important;
+    }
+    
+    ul li {
+      color: var(--text-secondary) !important;
+    }
+    
+    a {
+      color: var(--text-secondary) !important;
+      
+      &:hover {
+        color: var(--accent-yellow) !important;
+      }
+    }
+    
+    .copyright {
+      background: var(--bg-secondary) !important;
+      border-top: 1px solid var(--border-color) !important;
+      color: var(--text-muted) !important;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-grid { grid-template-columns: 1fr; text-align: center; }
+}

@@ -1,0 +1,140 @@
+<div class="news-container">
+  <!-- Hero Section -->
+  <section class="news-hero">
+    <div class="hero-content">
+      <h1>TIN TỨC - SỰ KIỆN</h1>
+      <p class="hero-subtitle">Cập nhật những thông tin mới nhất về hoạt động và thành tựu của PHƯỚC TRƯỜNG SANH</p>
+    </div>
+  </section>
+
+  <!-- Featured News -->
+  <section class="featured-news" *ngIf="featuredNews.length > 0">
+    <div class="container">
+      <h2>Tin Tức Nổi Bật</h2>
+      <div class="featured-grid">
+        <div class="main-featured" *ngIf="featuredNews.length > 0">
+          <div class="featured-image">
+            <img [src]="featuredNews[0].featuredImage" [alt]="featuredNews[0].title">
+            <div class="featured-overlay">
+              <mat-chip color="primary">Tin nổi bật</mat-chip>
+            </div>
+          </div>
+          <div class="featured-content">
+            <h3>{{featuredNews[0].title}}</h3>
+            <div class="news-meta">
+              <span class="date">
+                <mat-icon>calendar_today</mat-icon>
+                {{formatDate(featuredNews[0].publishedAt || featuredNews[0].createdAt)}}
+              </span>
+              <span class="category">
+                <mat-icon>business</mat-icon>
+                {{getCategoryName(featuredNews[0])}}
+              </span>
+            </div>
+            <p>{{featuredNews[0].excerpt}}</p>
+            <button mat-raised-button color="primary">
+              <mat-icon>arrow_forward</mat-icon>
+              Đọc tiếp
+            </button>
+          </div>
+        </div>
+
+        <div class="side-featured" *ngIf="featuredNews.length > 1">
+          <div class="side-news-item" *ngFor="let news of featuredNews.slice(1, 4)">
+            <img [src]="news.featuredImage" [alt]="news.title">
+            <div class="side-content">
+              <h4>{{news.title}}</h4>
+              <p class="date">{{formatDate(news.publishedAt || news.createdAt)}}</p>
+              <p>{{news.excerpt}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- All News -->
+  <section class="all-news">
+    <div class="container">
+      <h2>Tất Cả Tin Tức</h2>
+      
+      <!-- Loading state -->
+      <div *ngIf="isLoading" class="loading-state">
+        <p>Đang tải tin tức...</p>
+      </div>
+      
+      <!-- Real news from Firestore -->
+      <div class="news-grid" *ngIf="!isLoading && news.length > 0">
+        <mat-card *ngFor="let newsItem of news" class="news-card">
+          <div class="card-image">
+            <img mat-card-image [src]="newsItem.featuredImage" [alt]="newsItem.title">
+            <div class="image-overlay">
+              <mat-chip>{{getCategoryName(newsItem)}}</mat-chip>
+            </div>
+          </div>
+          <mat-card-content>
+            <h3>{{newsItem.title}}</h3>
+            <div class="news-meta">
+              <span class="date">
+                <mat-icon>calendar_today</mat-icon>
+                {{formatDate(newsItem.publishedAt || newsItem.createdAt)}}
+              </span>
+              <span class="author" *ngIf="newsItem.author">
+                <mat-icon>person</mat-icon>
+                {{newsItem.author.name}}
+              </span>
+            </div>
+            <p class="excerpt">{{newsItem.excerpt}}</p>
+            
+            <!-- Tags -->
+            <div class="tags" *ngIf="newsItem.tags && newsItem.tags.length > 0">
+              <mat-chip-set>
+                <mat-chip *ngFor="let tag of newsItem.tags.slice(0, 3)">{{tag}}</mat-chip>
+              </mat-chip-set>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button color="primary">
+              <mat-icon>visibility</mat-icon>
+              Đọc thêm
+            </button>
+            <button mat-icon-button>
+              <mat-icon>share</mat-icon>
+            </button>
+            <button mat-icon-button>
+              <mat-icon>bookmark_border</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+      <!-- Empty state - when no news available -->
+      <div class="empty-state" *ngIf="!isLoading && news.length === 0">
+        <mat-icon style="font-size: 48px; color: #ccc;">article</mat-icon>
+        <h3>Chưa có tin tức nào</h3>
+        <p>Hãy kiểm tra lại sau hoặc liên hệ admin để thêm tin tức.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Subscription -->
+  <section class="newsletter">
+    <div class="container">
+      <div class="newsletter-content">
+        <div class="newsletter-text">
+          <h2>Đăng Ký Nhận Tin Tức</h2>
+          <p>Theo dõi những cập nhật mới nhất về dự án và hoạt động của chúng tôi</p>
+        </div>
+        <div class="newsletter-form">
+          <div class="input-group">
+            <input type="email" placeholder="Nhập địa chỉ email của bạn">
+            <button mat-raised-button color="primary">
+              <mat-icon>send</mat-icon>
+              Đăng ký
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
