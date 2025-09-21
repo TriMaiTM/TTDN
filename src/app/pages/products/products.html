@@ -147,6 +147,11 @@
                 <div class="unit">/ {{ product.unit }}</div>
               </div>
               
+              <div class="stock-info" [class]="getProductStockClass(product)">
+                <mat-icon [class]="getProductStockClass(product)">{{ getProductStockIcon(product) }}</mat-icon>
+                <span>{{ getProductStockText(product) }}</span>
+              </div>
+              
               <div class="action-buttons">
                 <button mat-button 
                         color="primary" 

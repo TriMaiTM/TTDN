@@ -280,40 +280,6 @@
         <p>Cập nhật thông tin mới nhất về hoạt động của công ty</p>
       </div>
 
-      <div class="news-grid">
-        <div class="news-card main-news" *ngIf="news && news.length > 0">
-          <div class="news-image">
-            <img [src]="news[0]?.image" [alt]="news[0]?.title">
-            <mat-chip color="accent">Tin nổi bật</mat-chip>
-          </div>
-          <div class="news-content">
-            <h3>{{ news[0]?.title }}</h3>
-            <div class="news-meta">
-              <span>
-                <mat-icon>schedule</mat-icon>
-                {{ news[0]?.date }}
-              </span>
-            </div>
-            <p>{{ news[0]?.excerpt }}</p>
-            <button mat-button color="primary">
-              <mat-icon>read_more</mat-icon>
-              Đọc thêm
-            </button>
-          </div>
-        </div>
-
-        <div class="side-news">
-          <div class="news-item" *ngFor="let item of news?.slice(1, 4)">
-            <img [src]="item.image" [alt]="item.title">
-            <div class="item-content">
-              <h4>{{ item.title }}</h4>
-              <span class="date">{{ item.date }}</span>
-              <p>{{ item.excerpt }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="section-footer">
         <button mat-stroked-button routerLink="/news" color="primary">
           <mat-icon>arrow_forward</mat-icon>
@@ -328,7 +294,7 @@
     <div class="container">
       <div class="cta-content">
         <div class="cta-text">
-          <h2>Bắt Đầu Dự Án Của Bạn Ngay Hôm Nay</h2>
+          <h2>Bắt đầu dự án của bạn ngay hôm nay</h2>
           <p>
             Liên hệ với chúng tôi để được tư vấn miễn phí và nhận báo giá chi tiết 
             cho dự án xây dựng của bạn. Đội ngũ chuyên gia sẵn sàng hỗ trợ 24/7.

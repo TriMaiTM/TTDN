@@ -125,6 +125,12 @@ import { CartService } from '../../services/cart.service';
                 <mat-icon>add</mat-icon>
               </button>
             </div>
+            
+            <!-- Cart Status Info -->
+            <div class="cart-status" *ngIf="(isInCart$ | async)">
+              <mat-icon>shopping_cart</mat-icon>
+              <span>Đã có {{ (itemQuantityInCart$ | async) }} trong giỏ hàng</span>
+            </div>
           </div>
 
           <div class="action-buttons">
@@ -134,7 +140,7 @@ import { CartService } from '../../services/cart.service';
                     [disabled]="product.stock === 0"
                     (click)="addToCart()">
               <mat-icon>add_shopping_cart</mat-icon>
-              Thêm vào giỏ hàng
+              {{ (isInCart$ | async) ? 'Thêm thêm vào giỏ' : 'Thêm vào giỏ hàng' }}
             </button>
             
             <button mat-raised-button 
@@ -144,6 +150,16 @@ import { CartService } from '../../services/cart.service';
                     (click)="buyNow()">
               <mat-icon>flash_on</mat-icon>
               Mua ngay
+            </button>
+            
+            <!-- Cart Quick Actions -->
+            <button mat-stroked-button 
+                    color="primary"
+                    class="view-cart"
+                    *ngIf="(cartItemCount$ | async)! > 0"
+                    (click)="goToCart()">
+              <mat-icon [matBadge]="(cartItemCount$ | async)!" matBadgeColor="accent">shopping_cart</mat-icon>
+              Xem giỏ hàng
             </button>
           </div>
 
@@ -458,16 +474,40 @@ import { CartService } from '../../services/cart.service';
       font-size: 16px;
     }
 
+    .cart-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #4caf50;
+      font-size: 14px;
+      padding: 8px 12px;
+      background: rgba(76, 175, 80, 0.1);
+      border-radius: 6px;
+      border: 1px solid rgba(76, 175, 80, 0.3);
+    }
+
+    .cart-status mat-icon {
+      font-size: 18px;
+    }
+
     .action-buttons {
       display: flex;
       gap: 15px;
+      flex-wrap: wrap;
     }
 
     .add-to-cart, .buy-now {
       flex: 1;
+      min-width: 200px;
       height: 50px;
       font-size: 16px;
       font-weight: 500;
+    }
+
+    .view-cart {
+      height: 50px;
+      font-weight: 500;
+      min-width: 150px;
     }
 
     .product-tags h4 {
@@ -618,6 +658,12 @@ import { CartService } from '../../services/cart.service';
 
       .action-buttons {
         flex-direction: column;
+        gap: 10px;
+      }
+
+      .add-to-cart, .buy-now, .view-cart {
+        min-width: auto;
+        width: 100%;
       }
 
       .products-grid {
@@ -639,6 +685,9 @@ export class ProductDetailComponent implements OnInit {
   loading = true;
   quantity = 1;
   currentImage = '';
+  cartItemCount$ = this.cartService.getCartItemCount();
+  isInCart$ = this.cartService.isInCart('');
+  itemQuantityInCart$ = this.cartService.getItemQuantity('');
 
   async ngOnInit() {
     this.route.params.subscribe(async params => {
@@ -656,6 +705,11 @@ export class ProductDetailComponent implements OnInit {
         if (product) {
           this.product = product;
           this.currentImage = product.images?.[0] || '';
+          
+          // Update observables for cart status
+          this.isInCart$ = this.cartService.isInCart(product.id);
+          this.itemQuantityInCart$ = this.cartService.getItemQuantity(product.id);
+          
           await this.loadRelatedProducts(product.category);
         }
         this.loading = false;
@@ -704,8 +758,8 @@ export class ProductDetailComponent implements OnInit {
   getStockText(): string {
     if (!this.product) return '';
     if (this.product.stock === 0) return 'Hết hàng';
-    if (this.product.stock < 10) return `Chỉ còn ${this.product.stock} sản phẩm`;
-    return 'Còn hàng';
+    if (this.product.stock < 5) return `Chỉ còn ${this.product.stock} sản phẩm`;
+    return `Còn ${this.product.stock} sản phẩm`;
   }
 
   increaseQuantity() {
@@ -720,26 +774,57 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 
-  addToCart() {
+  async addToCart() {
     if (!this.product) return;
     
-    this.cartService.addToCart(this.product, this.quantity);
-    this.snackBar.open(
-      `Đã thêm ${this.quantity} ${this.product.name} vào giỏ hàng`, 
-      'Đóng', 
-      { duration: 3000 }
-    );
+    console.log('addToCart - Product:', this.product);
+    console.log('addToCart - Product ID:', this.product.id);
+    console.log('addToCart - Quantity:', this.quantity);
+    
+    try {
+      await this.cartService.addToCart(this.product, this.quantity);
+      this.snackBar.open(
+        `✅ Đã thêm ${this.quantity} ${this.product.name} vào giỏ hàng`, 
+        'Xem giỏ hàng', 
+        { duration: 4000 }
+      ).onAction().subscribe(() => {
+        this.router.navigate(['/cart']);
+      });
+      
+      // Reset quantity về 1 sau khi thêm thành công
+      this.quantity = 1;
+      
+    } catch (error: any) {
+      console.error('Error adding to cart:', error);
+      this.snackBar.open(
+        `❌ ${error.message || 'Không thể thêm vào giỏ hàng'}`,
+        'Đóng',
+        { duration: 4000 }
+      );
+    }
   }
 
-  buyNow() {
+  async buyNow() {
     if (!this.product) return;
     
-    this.addToCart();
-    this.router.navigate(['/cart']);
+    try {
+      await this.addToCart();
+      // Navigate to cart after successful add
+      setTimeout(() => {
+        this.router.navigate(['/cart']);
+      }, 500);
+      
+    } catch (error) {
+      console.error('Error in buy now:', error);
+    }
   }
 
   navigateToProduct(productId: string) {
     this.router.navigate(['/product', productId]);
+  }
+
+  goToCart() {
+    this.router.navigate(['/cart']);
   }
 
   formatDescription(description: string): string {

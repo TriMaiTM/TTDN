@@ -7,17 +7,6 @@
       <a class="logo" routerLink="/"><img src="assets/images/icon.png" alt="logo" height="44"></a>
     </div>
 
-    <!-- Theme toggle -->
-    <div class="theme-toggle">
-      <mat-icon>light_mode</mat-icon>
-      <mat-slide-toggle 
-        [checked]="themeService.isDarkMode()" 
-        (change)="toggleTheme()"
-        color="accent">
-      </mat-slide-toggle>
-      <mat-icon>dark_mode</mat-icon>
-    </div>
-
     <!-- Desktop nav -->
     <nav class="nav-links" (mouseleave)="closeAboutSoon()">
       <!-- Trang chủ -->
@@ -101,7 +90,95 @@
       <a mat-raised-button color="accent" routerLink="/contact" class="nav-item contact-btn"
          (mouseenter)="cancelClose()" (mouseleave)="closeAboutSoon()">LIÊN HỆ</a>
 
-      <!-- Admin (chỉ hiện khi cần thiết) -->
+      <!-- Shopping Cart with Dropdown -->
+      <div class="cart-dropdown-container" 
+           (mouseenter)="openCartDropdown()" 
+           (mouseleave)="closeCartDropdown()">
+        <button mat-icon-button routerLink="/cart" class="cart-button">
+          <mat-icon [matBadge]="(cartItemCount$ | async)!" 
+                    [matBadgeHidden]="(cartItemCount$ | async)! === 0"
+                    matBadgeColor="accent">shopping_cart</mat-icon>
+        </button>
+        
+        <!-- Mini Cart Dropdown -->
+        <div class="mini-cart-dropdown" [class.show]="showCartDropdown">
+          <div class="mini-cart-header">
+            <h4>Giỏ hàng ({{ (cartItemCount$ | async)! }} sản phẩm)</h4>
+          </div>
+          
+          <div class="mini-cart-items">
+            <ng-container *ngIf="cart$ | async as cart">
+              <div *ngIf="!cart?.items || cart.items.length === 0" class="empty-mini-cart">
+                <p>Giỏ hàng trống</p>
+              </div>
+              
+              <div *ngFor="let item of getCartItems(cart)" class="mini-cart-item">
+                <img [src]="item.image" [alt]="item.productName" class="mini-item-image">
+                <div class="mini-item-details">
+                  <p class="mini-item-name">{{ item.productName }}</p>
+                  <p class="mini-item-price">{{ item.quantity }} x {{ formatPrice(item.price) }}</p>
+                </div>
+              </div>
+              
+              <div *ngIf="shouldShowMoreItems(cart)" class="more-items">
+                và {{ getMoreItemsCount(cart) }} sản phẩm khác...
+              </div>
+            </ng-container>
+          </div>
+          
+          <div class="mini-cart-footer">
+            <div class="mini-cart-total">
+              <strong>Tổng: {{ formatPrice((cartTotal$ | async)!) }}</strong>
+            </div>
+            <div class="mini-cart-actions">
+              <button mat-button routerLink="/cart" class="view-cart-btn">Xem giỏ hàng</button>
+              <button mat-raised-button color="primary" routerLink="/checkout" 
+                      *ngIf="isAuthenticated" class="checkout-btn">Thanh toán</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Auth Navigation -->
+      @if (isAuthenticated) {
+        <!-- User Menu -->
+        <div class="user-menu">
+          <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+            <mat-icon>account_circle</mat-icon>
+            <span>{{ user?.name }}</span>
+            <mat-icon>expand_more</mat-icon>
+          </button>
+          <mat-menu #userMenu="matMenu">
+            <button mat-menu-item (click)="navigateToProfile()">
+              <mat-icon>person</mat-icon>
+              <span>Hồ sơ</span>
+            </button>
+            @if (isAdmin) {
+              <mat-divider></mat-divider>
+              <button mat-menu-item (click)="navigateToAdmin()">
+                <mat-icon>admin_panel_settings</mat-icon>
+                <span>Quản trị</span>
+              </button>
+            }
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="logout()">
+              <mat-icon>logout</mat-icon>
+              <span>Đăng xuất</span>
+            </button>
+          </mat-menu>
+        </div>
+      } @else {
+        <!-- Login/Register Buttons -->
+        <div class="auth-buttons">
+          <button mat-button (click)="navigateToLogin()" class="login-btn">
+            <mat-icon>login</mat-icon>
+            ĐĂNG NHẬP
+          </button>
+          <button mat-raised-button color="accent" (click)="navigateToRegister()" class="register-btn">
+            ĐĂNG KÝ
+          </button>
+        </div>
+      }
       <a 
         routerLink="/admin" 
         class="nav-item admin-link"
@@ -131,7 +208,38 @@
       <a mat-list-item routerLink="/projects" (click)="showSidenav=false">Dự án</a>
       <a mat-list-item routerLink="/news" (click)="showSidenav=false">Tin tức</a>
       <a mat-list-item routerLink="/contact" (click)="showSidenav=false">Liên hệ</a>
-      <a mat-list-item routerLink="/admin" (click)="showSidenav=false">⚙️ Admin Panel</a>
+      
+      <mat-divider></mat-divider>
+      
+      @if (isAuthenticated) {
+        <!-- Authenticated User Menu -->
+        <mat-list-item>
+          <div class="user-info">
+            <mat-icon>account_circle</mat-icon>
+            <span>{{ user?.name }}</span>
+          </div>
+        </mat-list-item>
+        @if (isAdmin) {
+          <a mat-list-item routerLink="/admin" (click)="showSidenav=false">
+            <mat-icon>admin_panel_settings</mat-icon>
+            <span>Quản trị</span>
+          </a>
+        }
+        <a mat-list-item (click)="logout(); showSidenav=false">
+          <mat-icon>logout</mat-icon>
+          <span>Đăng xuất</span>
+        </a>
+      } @else {
+        <!-- Guest Menu -->
+        <a mat-list-item routerLink="/auth/login" (click)="showSidenav=false">
+          <mat-icon>login</mat-icon>
+          <span>Đăng nhập</span>
+        </a>
+        <a mat-list-item routerLink="/auth/register" (click)="showSidenav=false">
+          <mat-icon>person_add</mat-icon>
+          <span>Đăng ký</span>
+        </a>
+      }
     </mat-nav-list>
   </mat-sidenav>
 </mat-sidenav-container>

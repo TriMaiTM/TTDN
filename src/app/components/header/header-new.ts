@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -24,6 +25,7 @@ import { Cart } from '../../models/order.model';
     MatIconModule,
     MatSidenavModule,
     MatListModule,
+    MatSlideToggleModule,
     MatMenuModule,
     MatDividerModule,
     MatBadgeModule
@@ -36,8 +38,12 @@ export class HeaderComponent {
   private cartService = inject(CartService);
   
   showSidenav = false;
+
+  // state dropdown about
   showAboutDropdown = false;
   showCartDropdown = false;
+
+  // optional small delay to avoid flicker (ms)
   private closeTimer: any;
   private cartCloseTimer: any;
 
@@ -50,7 +56,7 @@ export class HeaderComponent {
     public authService: AuthService
   ) {}
 
-  // Computed properties for template
+  // Auth-related computed properties for template
   get user() { return this.authService.user(); }
   get isAuthenticated() { return this.authService.isAuthenticated(); }
   get isAdmin() { return this.authService.isAdmin(); }
@@ -105,21 +111,12 @@ export class HeaderComponent {
     return cart.items.length - 3;
   }
 
-  // Auth methods
   async logout() {
     try {
       await this.authService.logout();
     } catch (error) {
       console.error('Logout failed:', error);
     }
-  }
-
-  navigateToLogin() {
-    this.router.navigate(['/auth/login']);
-  }
-
-  navigateToRegister() {
-    this.router.navigate(['/auth/register']);
   }
 
   navigateToProfile() {
@@ -132,8 +129,18 @@ export class HeaderComponent {
     }
   }
 
+  navigateToLogin() {
+    this.router.navigate(['/auth/login']);
+  }
+
+  navigateToRegister() {
+    this.router.navigate(['/auth/register']);
+  }
+
+  // close dropdown when clicking anywhere outside (optional)
   @HostListener('document:click', ['$event'])
   onDocumentClick(e: Event) {
+    // if click outside nav area, close
     const target = e.target as HTMLElement;
     if (!target.closest('.nav-links')) {
       this.showAboutDropdown = false;

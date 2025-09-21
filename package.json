@@ -6,7 +6,10 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "git:save": "git add . && git commit -m 'update: Auto save changes' && git push",
+    "git:feature": "git add . && git commit -m 'feat: ' && git push",
+    "git:fix": "git add . && git commit -m 'fix: ' && git push"
   },
   "prettier": {
     "overrides": [

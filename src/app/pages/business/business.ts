@@ -1,4 +1,4 @@
-﻿import { Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,60 +17,59 @@ export class BusinessComponent {
   
   businessActivities = [
     {
-      title: 'Xây dựng Dân dụng',
-      icon: 'home',
-      description: 'Chuyên thi công các công trình dân dụng: nhà ở, chung cư, biệt thự...',
+      title: 'Thi công xây dựng',
+      icon: 'construction',
+      description: 'Chuyên thi công các công trình dân dụng và công nghiệp với chất lượng cao',
       details: [
-        'Thiết kế và thi công nhà ở cá nhân',
-        'Xây dựng chung cư cao tầng', 
-        'Thi công biệt thự, villa sang trọng',
-        'Cải tạo, sửa chữa nhà cũ'
+        'Thi công nhà ở, biệt thự, chung cư',
+        'Xây dựng nhà máy, kho bãi công nghiệp',
+        'Thi công hạ tầng kỹ thuật',
+        'Cải tạo và sửa chữa công trình'
       ]
     },
     {
-      title: 'Xây dựng Công nghiệp',
-      icon: 'business',
-      description: 'Thi công các công trình công nghiệp quy mô lớn với tiêu chuẩn cao',
-      details: [
-        'Nhà máy, kho bãi công nghiệp',
-        'Trung tâm logistics, warehouse',
-        'Công trình hạ tầng kỹ thuật',
-        'Hệ thống điện, nước công nghiệp'
-      ]
-    },
-    {
-      title: 'Tư vấn Thiết kế',
-      icon: 'architecture',
-      description: 'Dịch vụ tư vấn và thiết kế chuyên nghiệp cho mọi loại công trình',
+      title: 'Tư vấn thiết kế',
+      icon: 'design_services',
+      description: 'Dịch vụ tư vấn và thiết kế kiến trúc, kết cấu chuyên nghiệp',
       details: [
         'Thiết kế kiến trúc và nội thất',
-        'Tư vấn kết cấu và M&E',
-        'Lập hồ sơ pháp lý xây dựng',
-        'Giám sát thi công chuyên nghiệp'
+        'Tư vấn kết cấu công trình',
+        'Thiết kế hệ thống M&E',
+        'Lập bản vẽ thi công chi tiết'
       ]
     },
     {
-      title: 'Thương mại Vật tư',
-      icon: 'store',
-      description: 'Cung cấp vật tư xây dựng chất lượng cao từ các thương hiệu uy tín',
+      title: 'Tư vấn giám sát và quản lý dự án',
+      icon: 'supervisor_account',
+      description: 'Dịch vụ giám sát thi công và quản lý dự án toàn diện',
       details: [
-        'Thép xây dựng các loại',
-        'Xi măng, cát, sỏi đá',
-        'Gạch block, gạch ốp lát',
-        'Thiết bị điện, nước, PCCC'
+        'Giám sát chất lượng thi công',
+        'Quản lý tiến độ dự án',
+        'Kiểm soát chi phí và ngân sách',
+        'Điều phối các bên liên quan'
+      ]
+    },
+    {
+      title: 'Tư vấn pháp lý',
+      icon: 'gavel',
+      description: 'Tư vấn pháp lý và thủ tục liên quan đến xây dựng',
+      details: [
+        'Lập hồ sơ xin phép xây dựng',
+        'Tư vấn pháp luật xây dựng',
+        'Giải quyết tranh chấp xây dựng',
+        'Thủ tục nghiệm thu công trình'
       ]
     }
-  ];
-
-  getRouteForActivity(title: string): string {
+  ];  getRouteForActivity(title: string): string {
     switch (title) {
-      case 'Xây dựng Dân dụng':
-      case 'Xây dựng Công nghiệp':
+      case 'Thi công xây dựng':
         return '/business/construction';
-      case 'Tư vấn Thiết kế':
-        return '/business/consulting';
-      case 'Thương mại Vật tư':
-        return '/business/materials';
+      case 'Tư vấn thiết kế':
+        return '/business/design';
+      case 'Tư vấn giám sát và quản lý dự án':
+        return '/business/supervision';
+      case 'Tư vấn pháp lý':
+        return '/business/legal';
       default:
         return '/business';
     }

@@ -199,4 +199,23 @@ export class ProductsComponent implements OnInit {
     }
     this.currentPage = 1;
   }
+
+  // Stock display methods
+  getProductStockClass(product: Product): string {
+    if (!product.stock || product.stock === 0) return 'stock-out';
+    if (product.stock < 5) return 'stock-low';
+    return 'stock-ok';
+  }
+
+  getProductStockIcon(product: Product): string {
+    if (!product.stock || product.stock === 0) return 'cancel';
+    if (product.stock < 5) return 'warning';
+    return 'check_circle';
+  }
+
+  getProductStockText(product: Product): string {
+    if (!product.stock || product.stock === 0) return 'Hết hàng';
+    if (product.stock < 5) return `Còn ${product.stock}`;
+    return `Còn ${product.stock}`;
+  }
 }

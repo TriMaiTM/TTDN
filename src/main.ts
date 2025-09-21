@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { getAuth, provideAuth } from '@angular/fire/auth';
 
 import { AppComponent } from './app/app';
 import { routes } from './app/app.routes';
@@ -16,6 +17,7 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(HttpClientModule),
     importProvidersFrom(BrowserAnimationsModule),
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
-    provideFirestore(() => getFirestore())
+    provideFirestore(() => getFirestore()),
+    provideAuth(() => getAuth())
   ]
 }).catch(err => console.error(err));

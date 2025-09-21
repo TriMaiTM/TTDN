@@ -1,0 +1,171 @@
+<div class="cart-container">
+  <!-- Loading state -->
+  <div *ngIf="!(cart$ | async)" class="loading-container">
+    <div class="loading-spinner">
+      <mat-icon>shopping_cart</mat-icon>
+      <p>Đang tải giỏ hàng...</p>
+    </div>
+  </div>
+
+  <!-- Cart content -->
+  <div *ngIf="cart$ | async as cart" class="cart-content">
+    <!-- Page header -->
+    <div class="page-header">
+      <h1>
+        <mat-icon>shopping_cart</mat-icon>
+        Giỏ hàng của bạn
+      </h1>
+      <p *ngIf="cart.totalItems > 0">{{ cart.totalItems }} sản phẩm</p>
+    </div>
+
+    <!-- Empty cart -->
+    <div *ngIf="cart.totalItems === 0" class="empty-cart">
+      <div class="empty-cart-content">
+        <mat-icon class="empty-icon">shopping_cart</mat-icon>
+        <h2>Giỏ hàng trống</h2>
+        <p>Bạn chưa thêm sản phẩm nào vào giỏ hàng</p>
+        <button mat-raised-button color="primary" (click)="continueShopping()">
+          <mat-icon>store</mat-icon>
+          Tiếp tục mua sắm
+        </button>
+      </div>
+    </div>
+
+    <!-- Cart items -->
+    <div *ngIf="cart.totalItems > 0" class="cart-items-container">
+      <div class="cart-items">
+        <mat-card *ngFor="let item of cart.items" class="cart-item">
+          <div class="item-image" (click)="goToProductDetail(item.productId)">
+            <img [src]="item.image" [alt]="item.productName" 
+                 onerror="this.src='assets/images/placeholder-product.jpg'">
+          </div>
+
+          <div class="item-details">
+            <h3 class="item-name" (click)="goToProductDetail(item.productId)">
+              {{ item.productName }}
+            </h3>
+            <p class="item-brand" *ngIf="item.brand">
+              Thương hiệu: {{ item.brand }}
+            </p>
+            <p class="item-sku" *ngIf="item.sku">
+              Mã SP: {{ item.sku }}
+            </p>
+            
+            <div class="item-price">
+              <span class="current-price">{{ formatPrice(item.price) }}</span>
+              <span *ngIf="item.originalPrice && item.originalPrice > item.price" 
+                    class="original-price">
+                {{ formatPrice(item.originalPrice) }}
+              </span>
+            </div>
+            
+            <div class="item-stock">
+              <mat-icon [class]="getStockForItem(item.productId) === 0 ? 'stock-out' : getStockForItem(item.productId) < 5 ? 'stock-low' : 'stock-ok'">
+                {{ getStockForItem(item.productId) === 0 ? 'cancel' : getStockForItem(item.productId) < 5 ? 'warning' : 'check_circle' }}
+              </mat-icon>
+              <span [class]="getStockForItem(item.productId) === 0 ? 'stock-text-out' : getStockForItem(item.productId) < 5 ? 'stock-text-low' : 'stock-text-ok'">
+                {{ getStockText(item, getStockForItem(item.productId)) }}
+              </span>
+            </div>
+          </div>
+
+          <div class="item-quantity">
+            <div class="quantity-controls">
+              <button mat-icon-button 
+                      [disabled]="item.quantity <= 1"
+                      (click)="updateQuantity(item.productId, item.quantity - 1)">
+                <mat-icon>remove</mat-icon>
+              </button>
+              
+              <span class="quantity">{{ item.quantity }}</span>
+              
+              <button mat-icon-button 
+                      [disabled]="!canIncrease(item) || getStockForItem(item.productId) === 0"
+                      (click)="updateQuantity(item.productId, item.quantity + 1)">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+            
+            <p class="item-unit">{{ item.unit || 'cái' }}</p>
+          </div>
+
+          <div class="item-total">
+            <p class="total-price">{{ formatPrice(item.totalPrice) }}</p>
+            <button mat-icon-button 
+                    color="warn" 
+                    class="remove-button"
+                    (click)="removeItem(item.productId)"
+                    matTooltip="Xóa sản phẩm">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </mat-card>
+      </div>
+
+      <!-- Cart summary -->
+      <div class="cart-summary">
+        <mat-card class="summary-card">
+          <mat-card-header>
+            <mat-card-title>Tổng đơn hàng</mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="summary-row">
+              <span>Tạm tính ({{ cart.totalItems }} sản phẩm):</span>
+              <span>{{ formatPrice(cart.totalAmount) }}</span>
+            </div>
+            
+            <div class="summary-row">
+              <span>Phí vận chuyển:</span>
+              <span>Miễn phí</span>
+            </div>
+            
+            <mat-divider></mat-divider>
+            
+            <div class="summary-row total-row">
+              <span>Tổng cộng:</span>
+              <span class="total-amount">{{ formatPrice(cart.totalAmount) }}</span>
+            </div>
+          </mat-card-content>
+          
+          <mat-card-actions>
+            <!-- Check if user is authenticated -->
+            <div *ngIf="isAuthenticated; else loginPrompt">
+              <button mat-raised-button 
+                      color="primary" 
+                      class="checkout-button"
+                      (click)="goToCheckout()">
+                <mat-icon>payment</mat-icon>
+                Thanh toán
+              </button>
+            </div>
+            
+            <ng-template #loginPrompt>
+              <p class="login-message">Vui lòng đăng nhập để thanh toán</p>
+              <button mat-raised-button 
+                      color="primary" 
+                      class="login-button"
+                      (click)="login()">
+                <mat-icon>login</mat-icon>
+                Đăng nhập
+              </button>
+            </ng-template>
+            
+            <button mat-button (click)="continueShopping()">
+              <mat-icon>arrow_back</mat-icon>
+              Tiếp tục mua sắm
+            </button>
+            
+            <button mat-button 
+                    color="warn" 
+                    (click)="clearCart()"
+                    *ngIf="cart.totalItems > 0">
+              <mat-icon>clear_all</mat-icon>
+              Xóa tất cả
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

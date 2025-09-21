@@ -128,21 +128,50 @@ export type PaymentStatus =
 // User Models
 export interface User {
   id: string;
+  uid: string; // Firebase Auth UID
   email: string;
   name: string;
-  phone: string;
+  phone?: string;
   avatar?: string;
   company?: string;
   taxCode?: string;
   role: UserRole;
-  addresses: Address[];
+  addresses?: Address[];
   isEmailVerified: boolean;
-  isPhoneVerified: boolean;
+  isPhoneVerified?: boolean;
   createdAt: Date;
-  lastLogin: Date;
+  lastLogin?: Date;
 }
 
-export type UserRole = 'customer' | 'admin' | 'staff' | 'manager';
+export type UserRole = 'user' | 'admin';
+
+// Auth Models
+export interface AuthUser {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+  emailVerified: boolean;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterCredentials {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+}
 
 export interface Address {
   id: string;
@@ -266,6 +295,9 @@ export interface SalesData {
   orders: number;
   customers: number;
 }
+
+// Order Models - Updated
+export * from './order.model';
 
 // News Models
 export interface NewsOriginal {

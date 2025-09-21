@@ -1,0 +1,146 @@
+<div class="register-container">
+  <div class="register-wrapper">
+    <mat-card class="register-card">
+      <mat-card-header class="register-header">
+        <mat-card-title>🎉 ĐĂNG KÝ</mat-card-title>
+        <mat-card-subtitle>Tạo tài khoản để khám phá những điều tuyệt vời</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <!-- Loading Spinner -->
+        <div *ngIf="isLoading()" class="loading-spinner">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+
+        <!-- Register Form -->
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+          <!-- Name Field -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Họ và tên</mat-label>
+            <input 
+              matInput 
+              type="text"
+              formControlName="name"
+              placeholder="Nhập họ và tên"
+              [class.error]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+            >
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+              {{ getErrorMessage('name') }}
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Email Field -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input 
+              matInput 
+              type="email"
+              formControlName="email"
+              placeholder="Nhập email của bạn"
+              [class.error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+            >
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+              {{ getErrorMessage('email') }}
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Password Field -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Mật khẩu</mat-label>
+            <input 
+              matInput 
+              [type]="hidePassword ? 'password' : 'text'"
+              formControlName="password"
+              placeholder="Nhập mật khẩu (ít nhất 6 ký tự)"
+              [class.error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+            >
+            <button 
+              mat-icon-button 
+              matSuffix 
+              type="button"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hidePassword"
+            >
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+              {{ getErrorMessage('password') }}
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Confirm Password Field -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Xác nhận mật khẩu</mat-label>
+            <input 
+              matInput 
+              [type]="hideConfirmPassword ? 'password' : 'text'"
+              formControlName="confirmPassword"
+              placeholder="Nhập lại mật khẩu"
+              [class.error]="(registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched) || (registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched)"
+            >
+            <button 
+              mat-icon-button 
+              matSuffix 
+              type="button"
+              (click)="toggleConfirmPasswordVisibility()"
+              [attr.aria-label]="'Hide confirm password'"
+              [attr.aria-pressed]="hideConfirmPassword"
+            >
+              <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="(registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched) || (registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched)">
+              {{ getErrorMessage('confirmPassword') }}
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Terms Checkbox -->
+          <div class="terms-section">
+            <mat-checkbox formControlName="agreeToTerms" color="primary">
+              Tôi đồng ý với 
+              <a href="#" class="link">Điều khoản sử dụng</a> 
+              và 
+              <a href="#" class="link">Chính sách bảo mật</a>
+            </mat-checkbox>
+            <mat-error *ngIf="registerForm.get('agreeToTerms')?.invalid && registerForm.get('agreeToTerms')?.touched" class="terms-error">
+              Bạn phải đồng ý với điều khoản sử dụng
+            </mat-error>
+          </div>
+
+          <!-- Error Display -->
+          <div *ngIf="error()" class="error-message">
+            <mat-icon>error</mat-icon>
+            <span>{{ error() }}</span>
+          </div>
+
+          <!-- Submit Button -->
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit"
+            class="register-button full-width"
+            [disabled]="isLoading() || !registerForm.valid"
+          >
+            <mat-icon *ngIf="isLoading()">refresh</mat-icon>
+            {{ isLoading() ? 'Đang đăng ký...' : 'Đăng ký' }}
+          </button>
+
+          <!-- Test Buttons -->
+          <div class="test-buttons">
+            <button mat-stroked-button type="button" (click)="fillTestUser()">
+              Điền thông tin test user
+            </button>
+          </div>
+        </form>
+
+        <!-- Login Link -->
+        <div class="login-link">
+          <span>Đã có tài khoản rồi? </span>
+          <a routerLink="/login" class="link">🚀 Đăng nhập ngay</a>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

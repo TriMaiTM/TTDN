@@ -6,6 +6,9 @@ import { Product, Category, Cart, CartItem, SearchParams, SearchResult, ProductF
   providedIn: 'root'
 })
 export class ProductService {
+  private productsSubject = new BehaviorSubject<Product[]>([]);
+  public products$ = this.productsSubject.asObservable();
+
   private products: Product[] = [
     {
       id: '1',
@@ -294,6 +297,11 @@ export class ProductService {
     }
   ];
 
+  constructor() {
+    // Initialize products subject
+    this.productsSubject.next(this.products);
+  }
+
   // Get all products
   getProducts(params?: SearchParams): Observable<SearchResult<Product>> {
     let filteredProducts = [...this.products];
@@ -486,5 +494,200 @@ export class ProductService {
       }
     }
     return null;
+  }
+
+  // ========== INVENTORY MANAGEMENT ==========
+
+  /**
+   * Giảm số lượng tồn kho khi có đơn hàng
+   */
+  async decreaseInventory(productId: string, quantity: number): Promise<boolean> {
+    try {
+      const product = this.products.find(p => p.id === productId);
+      if (!product) {
+        throw new Error(`Không tìm thấy sản phẩm với ID: ${productId}`);
+      }
+
+      if (product.stock < quantity) {
+        throw new Error(`Không đủ hàng trong kho. Còn lại: ${product.stock}, yêu cầu: ${quantity}`);
+      }
+
+      // Giảm stock
+      product.stock -= quantity;
+      
+      // Cập nhật trạng thái nếu hết hàng
+      if (product.stock === 0) {
+        product.status = 'out-of-stock';
+      }
+
+      // Update subjects
+      this.productsSubject.next(this.products);
+      
+      console.log(`Đã giảm ${quantity} sản phẩm ${product.name}. Còn lại: ${product.stock}`);
+      return true;
+
+    } catch (error) {
+      console.error('Error decreasing inventory:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Tăng số lượng tồn kho khi hủy đơn hàng
+   */
+  async increaseInventory(productId: string, quantity: number): Promise<boolean> {
+    try {
+      const product = this.products.find(p => p.id === productId);
+      if (!product) {
+        throw new Error(`Không tìm thấy sản phẩm với ID: ${productId}`);
+      }
+
+      // Tăng stock
+      product.stock += quantity;
+      
+      // Cập nhật trạng thái nếu có hàng trở lại
+      if (product.status === 'out-of-stock' && product.stock > 0) {
+        product.status = 'active';
+      }
+
+      // Update subjects
+      this.productsSubject.next(this.products);
+      
+      console.log(`Đã hoàn trả ${quantity} sản phẩm ${product.name}. Hiện có: ${product.stock}`);
+      return true;
+
+    } catch (error) {
+      console.error('Error increasing inventory:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Kiểm tra số lượng tồn kho
+   */
+  checkInventory(productId: string): Observable<number> {
+    const product = this.products.find(p => p.id === productId);
+    return of(product ? product.stock : 0);
+  }
+
+  /**
+   * Kiểm tra xem có thể đặt hàng với số lượng yêu cầu không
+   */
+  canOrder(productId: string, requestedQuantity: number): Observable<boolean> {
+    // Tìm trong danh sách products hiện tại
+    const product = this.products.find(p => p.id === productId);
+    console.log('canOrder - Looking for product ID:', productId);
+    console.log('canOrder - Available product IDs:', this.products.map(p => p.id));
+    console.log('canOrder - Product found:', product);
+    console.log('canOrder - Requested quantity:', requestedQuantity);
+    
+    if (!product) {
+      console.log('canOrder - Product not found');
+      return of(false);
+    }
+    
+    const canOrder = product.status === 'active' && 
+                     product.stock >= requestedQuantity &&
+                     requestedQuantity > 0;
+    
+    console.log('canOrder - Result:', {
+      status: product.status,
+      stock: product.stock,
+      requestedQuantity,
+      canOrder
+    });
+    
+    return of(canOrder);
+  }
+
+  /**
+   * Lấy danh sách sản phẩm sắp hết hàng (dưới 10 sản phẩm)
+   */
+  getLowStockProducts(threshold: number = 10): Observable<Product[]> {
+    return this.products$.pipe(
+      map(products => products.filter(p => p.stock <= threshold && p.stock > 0))
+    );
+  }
+
+  /**
+   * Lấy danh sách sản phẩm hết hàng
+   */
+  getOutOfStockProducts(): Observable<Product[]> {
+    return this.products$.pipe(
+      map(products => products.filter(p => p.stock === 0 || p.status === 'out-of-stock'))
+    );
+  }
+
+  /**
+   * Cập nhật stock cho một sản phẩm (dành cho admin)
+   */
+  async updateStock(productId: string, newStock: number): Promise<boolean> {
+    try {
+      const product = this.products.find(p => p.id === productId);
+      if (!product) {
+        throw new Error(`Không tìm thấy sản phẩm với ID: ${productId}`);
+      }
+
+      const oldStock = product.stock;
+      product.stock = Math.max(0, newStock); // Không cho phép số âm
+      
+      // Cập nhật trạng thái
+      if (product.stock === 0) {
+        product.status = 'out-of-stock';
+      } else if (product.status === 'out-of-stock' && product.stock > 0) {
+        product.status = 'active';
+      }
+
+      // Update subjects
+      this.productsSubject.next(this.products);
+      
+      console.log(`Đã cập nhật stock sản phẩm ${product.name}: ${oldStock} → ${product.stock}`);
+      return true;
+
+    } catch (error) {
+      console.error('Error updating stock:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Nhập hàng - tăng stock (dành cho admin)
+   */
+  async importStock(productId: string, importQuantity: number): Promise<boolean> {
+    if (importQuantity <= 0) {
+      throw new Error('Số lượng nhập phải lớn hơn 0');
+    }
+
+    return this.increaseInventory(productId, importQuantity);
+  }
+
+  /**
+   * Xuất hàng - giảm stock (dành cho admin)
+   */
+  async exportStock(productId: string, exportQuantity: number): Promise<boolean> {
+    if (exportQuantity <= 0) {
+      throw new Error('Số lượng xuất phải lớn hơn 0');
+    }
+
+    return this.decreaseInventory(productId, exportQuantity);
+  }
+
+  /**
+   * Reserve stock khi thêm vào giỏ hàng (tùy chọn)
+   */
+  async reserveStock(productId: string, quantity: number, reservationId: string): Promise<boolean> {
+    // TODO: Implement stock reservation system
+    // This is useful when you want to temporarily hold stock for items in cart
+    console.log(`Reserved ${quantity} of product ${productId} for reservation ${reservationId}`);
+    return true;
+  }
+
+  /**
+   * Release reserved stock khi xóa khỏi giỏ hàng
+   */
+  async releaseReservedStock(reservationId: string): Promise<boolean> {
+    // TODO: Implement stock release system
+    console.log(`Released reservation ${reservationId}`);
+    return true;
   }
 }

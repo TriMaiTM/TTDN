@@ -275,12 +275,3 @@
     margin: 40px 0;
   }
 }
-
-// Dark Theme Support
-:host-context(.dark-theme) {
-  .news-detail-container {
-    .article-excerpt .excerpt-text {
-      background: rgba(255,255,255,0.05);
-    }
-  }
-}
