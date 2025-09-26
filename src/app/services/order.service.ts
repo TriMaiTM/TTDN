@@ -44,6 +44,12 @@ export class OrderService {
       // Tạo order number duy nhất
       const orderNumber = this.generateOrderNumber();
       
+      console.log('Creating order with items:', checkoutData.selectedItems.map(item => ({ 
+        productId: item.productId, 
+        productName: item.productName,
+        quantity: item.quantity 
+      })));
+      
       // Chuyển đổi CartItem sang OrderItem
       const orderItems: OrderItem[] = checkoutData.selectedItems.map(item => ({
         id: this.generateId(),
@@ -104,10 +110,10 @@ export class OrderService {
 
     try {
       const ordersRef = collection(this.firestore, 'orders');
+      // Use simple query without orderBy to avoid index requirement
       const q = query(
         ordersRef, 
-        where('userId', '==', user.id),
-        orderBy('orderDate', 'desc')
+        where('userId', '==', user.id)
       );
       
       const querySnapshot = await getDocs(q);
@@ -125,7 +131,13 @@ export class OrderService {
         orders.push(order);
       });
 
-      this.ordersSubject.next(orders);
+      // Sort client-side by orderDate descending
+      orders.sort((a, b) => b.orderDate.getTime() - a.orderDate.getTime());
+      
+      // Limit to 50 most recent orders client-side
+      const limitedOrders = orders.slice(0, 50);
+
+      this.ordersSubject.next(limitedOrders);
     } catch (error) {
       console.error('Error loading orders:', error);
       throw new Error('Không thể tải danh sách đơn hàng');
@@ -133,8 +145,77 @@ export class OrderService {
   }
 
   /**
-   * Lấy chi tiết một đơn hàng
+   * Load all orders for admin (không filter theo userId)
    */
+  async loadAllOrdersForAdmin(): Promise<void> {
+    try {
+      const ordersRef = collection(this.firestore, 'orders');
+      const q = query(ordersRef);
+      
+      const querySnapshot = await getDocs(q);
+      const orders: Order[] = [];
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const order: Order = {
+          id: doc.id,
+          ...data,
+          orderDate: data['orderDate'].toDate(),
+          estimatedDeliveryDate: data['estimatedDeliveryDate']?.toDate(),
+          actualDeliveryDate: data['actualDeliveryDate']?.toDate()
+        } as Order;
+        orders.push(order);
+      });
+
+      // Sort by orderDate descending and limit to 100 most recent
+      orders.sort((a, b) => b.orderDate.getTime() - a.orderDate.getTime());
+      const limitedOrders = orders.slice(0, 100);
+
+      this.ordersSubject.next(limitedOrders);
+    } catch (error) {
+      console.error('Error loading all orders for admin:', error);
+      throw new Error('Không thể tải danh sách đơn hàng');
+    }
+  }
+
+  /**
+   * Update order status (admin function)
+   */
+  async updateOrderStatus(orderId: string, newStatus: OrderStatus): Promise<void> {
+    try {
+      const orderRef = doc(this.firestore, 'orders', orderId);
+      
+      const updateData: any = {
+        status: newStatus,
+        updatedAt: Timestamp.now()
+      };
+
+      // Add specific timestamps for status changes
+      if (newStatus === OrderStatus.CONFIRMED) {
+        updateData.confirmedAt = Timestamp.now();
+      } else if (newStatus === OrderStatus.PROCESSING) {
+        updateData.processingAt = Timestamp.now();
+      } else if (newStatus === OrderStatus.SHIPPING) {
+        updateData.shippedAt = Timestamp.now();
+      } else if (newStatus === OrderStatus.DELIVERED) {
+        updateData.deliveredAt = Timestamp.now();
+        updateData.actualDeliveryDate = Timestamp.now();
+      } else if (newStatus === OrderStatus.CANCELLED) {
+        updateData.cancelledAt = Timestamp.now();
+      }
+
+      await updateDoc(orderRef, updateData);
+      
+      console.log(`Order ${orderId} status updated to: ${newStatus}`);
+      
+      // Reload orders to reflect changes
+      await this.loadAllOrdersForAdmin();
+      
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      throw error;
+    }
+  }
   async getOrderById(orderId: string): Promise<Order | null> {
     try {
       const orderDoc = doc(this.firestore, 'orders', orderId);
@@ -145,30 +226,6 @@ export class OrderService {
     } catch (error) {
       console.error('Error getting order:', error);
       return null;
-    }
-  }
-
-  /**
-   * Cập nhật trạng thái đơn hàng
-   */
-  async updateOrderStatus(orderId: string, status: OrderStatus): Promise<void> {
-    try {
-      const orderDoc = doc(this.firestore, 'orders', orderId);
-      await updateDoc(orderDoc, { 
-        status,
-        updatedAt: Timestamp.now()
-      });
-
-      // Cập nhật local state
-      const currentOrders = this.ordersSubject.value;
-      const updatedOrders = currentOrders.map(order => 
-        order.id === orderId ? { ...order, status } : order
-      );
-      this.ordersSubject.next(updatedOrders);
-
-    } catch (error) {
-      console.error('Error updating order status:', error);
-      throw new Error('Không thể cập nhật trạng thái đơn hàng');
     }
   }
 
@@ -224,6 +281,12 @@ export class OrderService {
    */
   private async updateInventoryAfterOrder(orderItems: OrderItem[]): Promise<void> {
     try {
+      console.log('Updating inventory for order items:', orderItems.map(item => ({ 
+        productId: item.productId, 
+        productName: item.productName,
+        quantity: item.quantity 
+      })));
+      
       for (const item of orderItems) {
         await this.productService.decreaseInventory(item.productId, item.quantity);
       }

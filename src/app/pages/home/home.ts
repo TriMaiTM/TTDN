@@ -54,6 +54,9 @@ export class HomeComponent implements OnInit {
   }
 
   goToProduct(productId: string): void {
-    this.router.navigate(['/product', productId]);
+    this.router.navigate(['/product', productId]).then(() => {
+      // Scroll to top after navigation
+      window.scrollTo(0, 0);
+    });
   }
 }

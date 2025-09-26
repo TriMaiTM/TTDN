@@ -126,6 +126,10 @@ export class HeaderComponent {
     this.router.navigate(['/profile']);
   }
 
+  navigateToOrderHistory() {
+    this.router.navigate(['/order-history']);
+  }
+
   navigateToAdmin() {
     if (this.isAdmin) {
       this.router.navigate(['/admin']);

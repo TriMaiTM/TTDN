@@ -39,7 +39,7 @@ import { CategoryFilterComponent } from '../../components/category-filter/catego
   styleUrls: ['./products.scss']
 })
 export class ProductsComponent implements OnInit {
-  searchResult$: Observable<SearchResult<Product>>;
+  searchResult$!: Observable<SearchResult<Product>>;
   categories$: Observable<Category[]>;
   loading = false;
   
@@ -61,18 +61,48 @@ export class ProductsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {
+    console.log('ProductsComponent constructor - initializing...');
     this.categories$ = this.productService.getCategories();
-    this.searchResult$ = this.loadProducts();
+    
+    // Direct test of Firebase service
+    console.log('🔍 Testing DirectFirebaseProductService...');
+    this.productService.getProducts({ limit: 5 }).subscribe({
+      next: (result) => {
+        console.log('🎯 DirectFirebaseProductService test result:', result);
+      },
+      error: (error) => {
+        console.error('❌ DirectFirebaseProductService test error:', error);
+      }
+    });
   }
 
   ngOnInit(): void {
+    console.log('ProductsComponent ngOnInit called');
+    
+    // Initialize products observable
+    this.searchResult$ = this.loadProducts();
+    
+    // Debug subscription
+    this.searchResult$.subscribe({
+      next: (result) => {
+        console.log('🎯 Products loaded successfully:', result);
+        if (result.items) {
+          console.log(`📦 Found ${result.items.length} products:`, result.items.map(p => p.name));
+        }
+      },
+      error: (error) => {
+        console.error('❌ Error loading products:', error);
+      }
+    });
+    
     // Listen to route params for category
     this.route.params.subscribe(params => {
+      console.log('Route params:', params);
       if (params['category']) {
         this.categoryControl.setValue(params['category']);
         this.loadCategoryInfo(params['category']);
       }
-      this.loadProducts();
+      this.searchResult$ = this.loadProducts();
     });
 
     // Listen to form changes
@@ -81,8 +111,9 @@ export class ProductsComponent implements OnInit {
       this.sortControl.valueChanges.pipe(startWith('name')),
       this.categoryControl.valueChanges.pipe(startWith(''))
     ]).subscribe(() => {
+      console.log('Form controls changed');
       this.currentPage = 1;
-      this.loadProducts();
+      this.searchResult$ = this.loadProducts();
     });
   }
 
@@ -97,16 +128,18 @@ export class ProductsComponent implements OnInit {
       }
     };
 
+    console.log('LoadProducts called with params:', searchParams);
+
     if (this.categoryControl.value) {
-      this.searchResult$ = this.productService.getProductsByCategory(
+      console.log('Loading products by category:', this.categoryControl.value);
+      return this.productService.getProductsByCategory(
         this.categoryControl.value, 
         searchParams
       );
     } else {
-      this.searchResult$ = this.productService.getProducts(searchParams);
+      console.log('Loading all products');
+      return this.productService.getProducts(searchParams);
     }
-    
-    return this.searchResult$;
   }
 
   private loadCategoryInfo(categorySlug: string): void {
@@ -118,7 +151,7 @@ export class ProductsComponent implements OnInit {
   onPageChange(event: any): void {
     this.currentPage = event.pageIndex + 1;
     this.pageSize = event.pageSize;
-    this.loadProducts();
+    this.searchResult$ = this.loadProducts();
   }
 
   addToCart(product: Product): void {
@@ -159,7 +192,10 @@ export class ProductsComponent implements OnInit {
   }
 
   goToProduct(productId: string): void {
-    this.router.navigate(['/product', productId]);
+    this.router.navigate(['/product', productId]).then(() => {
+      // Scroll to top after navigation
+      window.scrollTo(0, 0);
+    });
   }
 
   addToWishlist(product: Product): void {
@@ -180,6 +216,7 @@ export class ProductsComponent implements OnInit {
     console.log('Products component received category:', categorySlug); // Debug log
     this.categoryControl.setValue(categorySlug || '');
     this.currentPage = 1;
+    this.searchResult$ = this.loadProducts();
   }
 
   onQuickFilterApplied(filter: any) {
@@ -198,6 +235,7 @@ export class ProductsComponent implements OnInit {
         break;
     }
     this.currentPage = 1;
+    this.searchResult$ = this.loadProducts();
   }
 
   // Stock display methods

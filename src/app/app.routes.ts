@@ -15,12 +15,17 @@ import { VisionComponent } from './pages/about/vision/vision';
 import { ProductsComponent } from './pages/products/products';
 import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
 import { CartComponent } from './pages/cart/cart.component';
+import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { OrderSuccessComponent } from './pages/order-success/order-success.component';
+import { OrderHistoryComponent } from './pages/order-history/order-history.component';
 import { DataInitializationComponent } from './pages/admin/data-initialization/data-initialization.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { FirebaseTestComponent } from './pages/admin/firebase-test/firebase-test.component';
 import { SimpleTestComponent } from './pages/admin/simple-test/simple-test-new.component';
 import { ProductManagementComponent } from './pages/admin/product-management/product-management.component';
 import { CategoryManagementComponent } from './pages/admin/category-management/category-management.component';
+import { OrderManagementComponent } from './pages/admin/order-management/order-management.component';
+import { CheckoutTestComponent } from './pages/admin/checkout-test/checkout-test.component';
 import { NewsAdminComponent } from './pages/admin/news-admin/news-admin';
 import { LoginComponent } from './pages/auth/login/login';
 import { RegisterComponent } from './pages/auth/register/register';
@@ -42,6 +47,26 @@ export const routes: Route[] = [
   { path: 'products/category/:category', component: ProductsComponent, title: 'Sản phẩm theo danh mục', data: { animation: 'ProductsPage' } },
   { path: 'product/:id', component: ProductDetailComponent, title: 'Chi tiết sản phẩm', data: { animation: 'ProductDetailPage' } },
   { path: 'cart', component: CartComponent, title: 'Giỏ hàng', data: { animation: 'CartPage' } },
+  { 
+    path: 'checkout', 
+    component: CheckoutComponent, 
+    title: 'Thanh toán', 
+    canActivate: [authGuard],
+    data: { animation: 'CheckoutPage' } 
+  },
+  { 
+    path: 'order-success', 
+    component: OrderSuccessComponent, 
+    title: 'Đặt hàng thành công', 
+    data: { animation: 'SuccessPage' } 
+  },
+  { 
+    path: 'order-history', 
+    component: OrderHistoryComponent, 
+    title: 'Lịch sử đơn hàng',
+    canActivate: [authGuard], 
+    data: { animation: 'OrderHistoryPage' } 
+  },
   { path: 'projects', component: ProjectsComponent, title: 'Dự án', data: { animation: 'ProjectsPage' } },
   { path: 'news', component: NewsComponent, title: 'Tin tức', data: { animation: 'NewsPage' } },
   { path: 'news/:id', component: NewsDetailComponent, title: 'Chi tiết tin tức', data: { animation: 'NewsDetailPage' } },
@@ -66,6 +91,14 @@ export const routes: Route[] = [
   // Legacy login redirect
   { path: 'login', redirectTo: 'auth/login' },
   { path: 'register', redirectTo: 'auth/register' },
+  
+  // Temporary data initialization route (no auth guard)
+  { 
+    path: 'data-init-temp', 
+    component: DataInitializationComponent, 
+    title: 'Temp Data Init',
+    data: { animation: 'AdminPage' } 
+  },
 
   // Admin routes (protected by admin guard)
   { 
@@ -107,6 +140,20 @@ export const routes: Route[] = [
     path: 'admin/categories', 
     component: CategoryManagementComponent, 
     title: 'Quản lý danh mục',
+    canActivate: [adminGuard],
+    data: { animation: 'AdminPage' } 
+  },
+  { 
+    path: 'admin/orders', 
+    component: OrderManagementComponent, 
+    title: 'Quản lý đơn hàng',
+    canActivate: [adminGuard],
+    data: { animation: 'AdminPage' } 
+  },
+  { 
+    path: 'admin/checkout-test', 
+    component: CheckoutTestComponent, 
+    title: 'Test Checkout Flow',
     canActivate: [adminGuard],
     data: { animation: 'AdminPage' } 
   },

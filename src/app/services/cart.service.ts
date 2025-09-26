@@ -37,6 +37,10 @@ export class CartService {
       console.log('CartService addToCart - Product ID:', product.id);
       console.log('CartService addToCart - Quantity:', quantity);
       
+      // Đảm bảo sử dụng giá đúng (đã tính discount)
+      const actualPrice = this.getActualPrice(product);
+      console.log('CartService addToCart - Original price:', product.price, 'Actual price:', actualPrice);
+      
       // Kiểm tra tồn kho trực tiếp từ product object thay vì gọi canOrder
       if (!product.stock || product.stock < quantity) {
         throw new Error(`Sản phẩm chỉ còn ${product.stock || 0} trong kho`);
@@ -65,7 +69,7 @@ export class CartService {
           ...updatedItems[existingItemIndex],
           quantity: newQuantity,
           maxQuantity: product.stock,
-          totalPrice: product.price * newQuantity
+          totalPrice: actualPrice * newQuantity
         };
       } else {
         // Thêm sản phẩm mới vào giỏ hàng
@@ -76,12 +80,12 @@ export class CartService {
           image: product.images[0] || '',
           brand: product.brand,
           sku: product.sku,
-          price: product.price,
+          price: actualPrice,
           originalPrice: product.originalPrice,
           quantity: quantity,
           maxQuantity: product.stock,
           unit: product.unit,
-          totalPrice: product.price * quantity,
+          totalPrice: actualPrice * quantity,
           isSelected: true
         };
         
@@ -319,5 +323,13 @@ export class CartService {
       console.error('Error loading cart from storage:', error);
       this.clearCart();
     }
+  }
+
+  // Helper method để tính giá thực tế (sau discount)
+  private getActualPrice(product: Product): number {
+    if (product.discount && product.originalPrice) {
+      return product.originalPrice - (product.originalPrice * product.discount / 100);
+    }
+    return product.price;
   }
 }

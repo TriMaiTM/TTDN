@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, from, map, of } from 'rxjs';
+import { Observable, from, map, of, catchError } from 'rxjs';
 import { initializeApp } from 'firebase/app';
 import { 
   getFirestore, 
@@ -33,7 +33,25 @@ export class DirectFirebaseProductService {
 
   // Get all products with optional filtering and pagination
   getProducts(params?: SearchParams): Observable<SearchResult<Product>> {
-    return from(this.fetchProductsInternal(params));
+    console.log('DirectFirebaseProductService.getProducts called with:', params);
+    return from(this.fetchProductsInternal(params)).pipe(
+      map(result => {
+        console.log('DirectFirebaseProductService.getProducts result:', result);
+        return result;
+      }),
+      catchError((error: any) => {
+        console.error('DirectFirebaseProductService.getProducts error:', error);
+        return of({ 
+          items: [], 
+          total: 0, 
+          page: 1, 
+          limit: 10, 
+          pages: 0,
+          hasNext: false,
+          hasPrev: false
+        });
+      })
+    );
   }
 
   // Public method to fetch products (for admin panel)

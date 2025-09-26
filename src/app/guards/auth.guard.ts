@@ -9,11 +9,16 @@ export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
+  // If still loading auth state, allow navigation (auth will handle it)
+  if (authService.isLoading()) {
+    return true;
+  }
+
   if (authService.isAuthenticated()) {
     return true;
   } else {
     // Redirect to login page
-    router.navigate(['/login'], {
+    router.navigate(['/auth/login'], {
       queryParams: { returnUrl: state.url }
     });
     return false;
@@ -27,9 +32,14 @@ export const adminGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
+  // If still loading auth state, allow navigation temporarily
+  if (authService.isLoading()) {
+    return true;
+  }
+
   // Kiểm tra xem user có đăng nhập không
   if (!authService.isAuthenticated()) {
-    router.navigate(['/login'], {
+    router.navigate(['/auth/login'], {
       queryParams: { returnUrl: state.url }
     });
     return false;

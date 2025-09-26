@@ -1,0 +1,228 @@
+<div class="order-history-container">
+  <div class="header">
+    <h1>Lịch sử đơn hàng</h1>
+    <div class="summary" *ngIf="!loading()">
+      <div class="stat">
+        <span class="count">{{ totalOrders() }}</span>
+        <span class="label">Đơn hàng hiệu lực</span>
+      </div>
+      <div class="stat">
+        <span class="count">{{ formatCurrency(totalSpent()) }}</span>
+        <span class="label">Tổng chi tiêu</span>
+      </div>
+      <div class="stat" *ngIf="cancelledOrders().length > 0">
+        <span class="count cancelled">{{ cancelledOrders().length }}</span>
+        <span class="label">Đã hủy</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="loading()">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Đang tải lịch sử đơn hàng...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-container" *ngIf="error() && !loading()">
+    <mat-icon color="warn">error_outline</mat-icon>
+    <h3>Có lỗi xảy ra</h3>
+    <p>{{ error() }}</p>
+    <button mat-raised-button color="primary" (click)="retry()">
+      <mat-icon>refresh</mat-icon>
+      Thử lại
+    </button>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-container" *ngIf="!loading() && !error() && orders().length === 0">
+    <mat-icon>shopping_bag</mat-icon>
+    <h3>Chưa có đơn hàng nào</h3>
+    <p>Bạn chưa thực hiện đơn hàng nào. Hãy bắt đầu mua sắm ngay!</p>
+    <button mat-raised-button color="primary" (click)="goToProducts()">
+      <mat-icon>shopping_cart</mat-icon>
+      Mua sắm ngay
+    </button>
+  </div>
+
+  <!-- Order Tabs -->
+  <div class="tabs-container" *ngIf="!loading() && !error() && orders().length > 0">
+    <mat-tab-group 
+      [selectedIndex]="selectedTabIndex()" 
+      (selectedIndexChange)="onTabChange($event)"
+      class="order-tabs">
+      
+      <!-- All Orders Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>list</mat-icon>
+          Tất cả ({{ allOrders().length }})
+        </ng-template>
+        
+        <div class="orders-grid" *ngIf="allOrders().length > 0">
+          <mat-card class="order-card" *ngFor="let order of allOrders(); trackBy: trackByOrderId">
+            <ng-container *ngTemplateOutlet="orderCardContent; context: { $implicit: order }"></ng-container>
+          </mat-card>
+        </div>
+        
+        <div class="tab-empty-state" *ngIf="allOrders().length === 0">
+          <mat-icon>shopping_bag</mat-icon>
+          <h3>Chưa có đơn hàng nào</h3>
+          <p>Bạn chưa thực hiện đơn hàng nào.</p>
+        </div>
+      </mat-tab>
+
+      <!-- Pending Orders Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>hourglass_empty</mat-icon>
+          Chờ xử lý ({{ pendingOrders().length }})
+        </ng-template>
+        
+        <div class="orders-grid" *ngIf="pendingOrders().length > 0">
+          <mat-card class="order-card" *ngFor="let order of pendingOrders(); trackBy: trackByOrderId">
+            <ng-container *ngTemplateOutlet="orderCardContent; context: { $implicit: order }"></ng-container>
+          </mat-card>
+        </div>
+        
+        <div class="tab-empty-state" *ngIf="pendingOrders().length === 0">
+          <mat-icon>hourglass_empty</mat-icon>
+          <h3>Không có đơn hàng đang chờ xử lý</h3>
+          <p>Tất cả đơn hàng đã được xử lý hoặc hoàn thành.</p>
+        </div>
+      </mat-tab>
+
+      <!-- Completed Orders Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>check_circle</mat-icon>
+          Hoàn thành ({{ completedOrders().length }})
+        </ng-template>
+        
+        <div class="orders-grid" *ngIf="completedOrders().length > 0">
+          <mat-card class="order-card" *ngFor="let order of completedOrders(); trackBy: trackByOrderId">
+            <ng-container *ngTemplateOutlet="orderCardContent; context: { $implicit: order }"></ng-container>
+          </mat-card>
+        </div>
+        
+        <div class="tab-empty-state" *ngIf="completedOrders().length === 0">
+          <mat-icon>check_circle</mat-icon>
+          <h3>Chưa có đơn hàng hoàn thành</h3>
+          <p>Các đơn hàng hoàn thành sẽ hiển thị ở đây.</p>
+        </div>
+      </mat-tab>
+
+      <!-- Cancelled Orders Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>cancel</mat-icon>
+          Đã hủy ({{ cancelledOrders().length }})
+        </ng-template>
+        
+        <div class="orders-grid" *ngIf="cancelledOrders().length > 0">
+          <mat-card class="order-card" *ngFor="let order of cancelledOrders(); trackBy: trackByOrderId">
+            <ng-container *ngTemplateOutlet="orderCardContent; context: { $implicit: order }"></ng-container>
+          </mat-card>
+        </div>
+        
+        <div class="tab-empty-state" *ngIf="cancelledOrders().length === 0">
+          <mat-icon>cancel</mat-icon>
+          <h3>Không có đơn hàng bị hủy</h3>
+          <p>Các đơn hàng đã hủy sẽ hiển thị ở đây.</p>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+
+<!-- Order Card Template -->
+<ng-template #orderCardContent let-order>
+  <mat-card-header>
+    <div class="order-header">
+      <div class="order-info">
+        <h3>#{{ order.id?.substring(0, 8) }}</h3>
+        <p class="order-date">{{ formatDate(order.orderDate) }}</p>
+          </div>
+          <mat-chip 
+            class="status-chip" 
+            [style.background-color]="getOrderStatusColor(order.status)"
+            [style.color]="'white'">
+            {{ getStatusText(order.status) }}
+          </mat-chip>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="order-details">
+          <div class="shipping-address">
+            <h4><mat-icon>location_on</mat-icon> Địa chỉ giao hàng</h4>
+            <p>{{ order.shippingAddress.fullName }}</p>
+            <p>{{ order.shippingAddress.address }}</p>
+            <p>{{ order.shippingAddress.city }}</p>
+            <p>SĐT: {{ order.shippingAddress.phone }}</p>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="order-items">
+            <h4><mat-icon>inventory_2</mat-icon> Sản phẩm ({{ order.items.length }})</h4>
+            <div class="item-list">
+              <div class="order-item" *ngFor="let item of order.items">
+                <img [src]="item.productImage" [alt]="item.productName" class="item-image">
+                <div class="item-details">
+                  <h5>{{ item.productName }}</h5>
+                  <p class="item-meta">{{ formatCurrency(item.price) }} x {{ item.quantity }}</p>
+                </div>
+                <div class="item-total">
+                  {{ formatCurrency(item.subtotal) }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="payment-info">
+            <div class="payment-row">
+              <span>Tổng sản phẩm:</span>
+              <span>{{ formatCurrency(order.totalAmount - order.shippingFee) }}</span>
+            </div>
+            <div class="payment-row">
+              <span>Phí vận chuyển:</span>
+              <span>{{ formatCurrency(order.shippingFee) }}</span>
+            </div>
+            <div class="payment-row total">
+              <span>Tổng cộng:</span>
+              <span>{{ formatCurrency(order.finalAmount || order.totalAmount) }}</span>
+            </div>
+            <div class="payment-method">
+              <mat-icon>payment</mat-icon>
+              <span>{{ getPaymentMethodText(order.paymentMethod) }}</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="viewOrderDetails(order.id!)">
+          <mat-icon>visibility</mat-icon>
+          Chi tiết
+        </button>
+        <button 
+          mat-button 
+          color="accent" 
+          (click)="reorderItems(order)"
+          *ngIf="canReorder(order.status)">
+          <mat-icon>repeat</mat-icon>
+          Mua lại
+        </button>
+        <button 
+          mat-button 
+          color="warn" 
+          (click)="cancelOrder(order.id!)"
+          *ngIf="canCancelOrder(order.status)">
+          <mat-icon>cancel</mat-icon>
+          Hủy đơn
+        </button>
+      </mat-card-actions>
+</ng-template>

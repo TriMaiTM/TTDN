@@ -1,0 +1,271 @@
+<div class="order-management-container">
+  <!-- Header Section -->
+  <div class="header">
+    <h1>Quản lý đơn hàng</h1>
+    <div class="header-stats" *ngIf="!loading()">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon color="primary">today</mat-icon>
+            <div class="stat-info">
+              <span class="stat-number">{{ todayOrders().length }}</span>
+              <span class="stat-label">Đơn hôm nay</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon color="warn">hourglass_empty</mat-icon>
+            <div class="stat-info">
+              <span class="stat-number">{{ pendingOrders().length }}</span>
+              <span class="stat-label">Chờ xác nhận</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon color="accent">attach_money</mat-icon>
+            <div class="stat-info">
+              <span class="stat-number">{{ formatCurrency(todayRevenue()) }}</span>
+              <span class="stat-label">Doanh thu hôm nay</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="loading()">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Đang tải danh sách đơn hàng...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-container" *ngIf="error() && !loading()">
+    <mat-icon color="warn">error_outline</mat-icon>
+    <h3>Có lỗi xảy ra</h3>
+    <p>{{ error() }}</p>
+    <button mat-raised-button color="primary" (click)="loadAllOrders()">
+      <mat-icon>refresh</mat-icon>
+      Thử lại
+    </button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content" *ngIf="!loading() && !error()">
+    <!-- Filters Section -->
+    <mat-card class="filters-card">
+      <mat-card-header>
+        <mat-card-title>Bộ lọc & Tìm kiếm</mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="filters-row">
+          <!-- Search -->
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Tìm kiếm (mã đơn, tên, SĐT)</mat-label>
+            <input matInput 
+                   [(ngModel)]="searchQuery" 
+                   (input)="searchQuery.set($any($event.target).value); onFilterChange()"
+                   placeholder="Nhập từ khóa...">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <!-- Status Filter -->
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Trạng thái</mat-label>
+            <mat-select [(ngModel)]="selectedStatus" 
+                        (selectionChange)="selectedStatus.set($event.value); onFilterChange()">
+              <mat-option *ngFor="let status of statusOptions" [value]="status.value">
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Date From -->
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Từ ngày</mat-label>
+            <input matInput 
+                   [matDatepicker]="fromPicker" 
+                   [(ngModel)]="selectedDateFrom"
+                   (ngModelChange)="selectedDateFrom.set($event); onFilterChange()">
+            <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+            <mat-datepicker #fromPicker></mat-datepicker>
+          </mat-form-field>
+
+          <!-- Date To -->
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Đến ngày</mat-label>
+            <input matInput 
+                   [matDatepicker]="toPicker" 
+                   [(ngModel)]="selectedDateTo"
+                   (ngModelChange)="selectedDateTo.set($event); onFilterChange()">
+            <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+            <mat-datepicker #toPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="filter-actions">
+          <button mat-button (click)="clearFilters()">
+            <mat-icon>clear</mat-icon>
+            Xóa bộ lọc
+          </button>
+          
+          <button mat-raised-button color="accent" (click)="exportToCSV()">
+            <mat-icon>download</mat-icon>
+            Xuất CSV ({{ filteredOrders().length }} đơn)
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Orders Table -->
+    <mat-card class="table-card">
+      <mat-card-header>
+        <mat-card-title>
+          Danh sách đơn hàng 
+          <span class="order-count">({{ filteredOrders().length }} đơn)</span>
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="table-container">
+          <table mat-table [dataSource]="filteredOrders()" class="orders-table">
+            <!-- Order Number Column -->
+            <ng-container matColumnDef="orderNumber">
+              <th mat-header-cell *matHeaderCellDef>Mã đơn hàng</th>
+              <td mat-cell *matCellDef="let order">
+                <div class="order-number">
+                  <strong>{{ order.orderNumber }}</strong>
+                  <small>#{{ order.id?.substring(0, 8) }}</small>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Customer Info Column -->
+            <ng-container matColumnDef="customerInfo">
+              <th mat-header-cell *matHeaderCellDef>Khách hàng</th>
+              <td mat-cell *matCellDef="let order">
+                <div class="customer-info">
+                  <div class="customer-name">{{ order.shippingAddress.fullName }}</div>
+                  <div class="customer-phone">{{ order.shippingAddress.phone }}</div>
+                  <div class="customer-address">{{ order.shippingAddress.address }}</div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Order Date Column -->
+            <ng-container matColumnDef="orderDate">
+              <th mat-header-cell *matHeaderCellDef>Ngày đặt</th>
+              <td mat-cell *matCellDef="let order">
+                <div class="order-date">
+                  {{ formatDate(order.orderDate) }}
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Total Amount Column -->
+            <ng-container matColumnDef="totalAmount">
+              <th mat-header-cell *matHeaderCellDef>Tổng tiền</th>
+              <td mat-cell *matCellDef="let order">
+                <div class="amount-info">
+                  <div class="total-amount">{{ formatCurrency(order.totalAmount) }}</div>
+                  <div class="item-count">{{ order.items.length }} sản phẩm</div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Trạng thái</th>
+              <td mat-cell *matCellDef="let order">
+                <mat-chip 
+                  class="status-chip"
+                  [style.background-color]="getStatusColor(order.status)"
+                  [style.color]="'white'">
+                  {{ getStatusText(order.status) }}
+                </mat-chip>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Thao tác</th>
+              <td mat-cell *matCellDef="let order">
+                <div class="actions-buttons">
+                  <!-- Confirm Order -->
+                  <button mat-icon-button 
+                          color="primary"
+                          matTooltip="Xác nhận đơn hàng"
+                          *ngIf="order.status === OrderStatus.PENDING"
+                          (click)="updateOrderStatus(order.id!, OrderStatus.CONFIRMED)">
+                    <mat-icon>check_circle</mat-icon>
+                  </button>
+
+                  <!-- Start Processing -->
+                  <button mat-icon-button 
+                          color="accent"
+                          matTooltip="Bắt đầu chuẩn bị"
+                          *ngIf="order.status === OrderStatus.CONFIRMED"
+                          (click)="updateOrderStatus(order.id!, OrderStatus.PROCESSING)">
+                    <mat-icon>build</mat-icon>
+                  </button>
+
+                  <!-- Ship Order -->
+                  <button mat-icon-button 
+                          color="warn"
+                          matTooltip="Giao hàng"
+                          *ngIf="order.status === OrderStatus.PROCESSING"
+                          (click)="updateOrderStatus(order.id!, OrderStatus.SHIPPING)">
+                    <mat-icon>local_shipping</mat-icon>
+                  </button>
+
+                  <!-- Mark Delivered -->
+                  <button mat-icon-button 
+                          color="primary"
+                          matTooltip="Hoàn thành"
+                          *ngIf="order.status === OrderStatus.SHIPPING"
+                          (click)="updateOrderStatus(order.id!, OrderStatus.DELIVERED)">
+                    <mat-icon>done_all</mat-icon>
+                  </button>
+
+                  <!-- Cancel Order -->
+                  <button mat-icon-button 
+                          color="warn"
+                          matTooltip="Hủy đơn hàng"
+                          *ngIf="order.status === OrderStatus.PENDING || order.status === OrderStatus.CONFIRMED"
+                          (click)="updateOrderStatus(order.id!, OrderStatus.CANCELLED)">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+
+                  <!-- View Details -->
+                  <button mat-icon-button 
+                          matTooltip="Xem chi tiết">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="filteredOrders().length === 0">
+          <mat-icon>inventory_2</mat-icon>
+          <h3>Không tìm thấy đơn hàng</h3>
+          <p>Không có đơn hàng nào phù hợp với điều kiện lọc hiện tại.</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

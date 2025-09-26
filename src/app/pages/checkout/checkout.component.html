@@ -1,0 +1,296 @@
+<div class="checkout-container">
+  <div class="container">
+    <div class="checkout-header">
+      <h1>
+        <mat-icon>shopping_cart_checkout</mat-icon>
+        Thanh toán đơn hàng
+      </h1>
+      <p>Vui lòng điền thông tin để hoàn tất đơn hàng của bạn</p>
+    </div>
+
+    <div class="checkout-content" *ngIf="cart$ | async as cart">
+      <!-- Order Summary Sidebar -->
+      <aside class="order-summary">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Đơn hàng của bạn</mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <!-- Cart Items -->
+            <div class="order-items">
+              <div class="order-item" *ngFor="let item of cart.items">
+                <img [src]="item.image" [alt]="item.productName" class="item-image">
+                <div class="item-details">
+                  <h4 class="item-name">{{ item.productName }}</h4>
+                  <div class="item-quantity">{{ item.quantity }} x {{ formatPrice(item.price) }}</div>
+                  <div class="item-total">{{ formatPrice(item.totalPrice) }}</div>
+                </div>
+              </div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <!-- Order Totals -->
+            <div class="order-totals">
+              <div class="total-row">
+                <span>Tạm tính:</span>
+                <span>{{ formatPrice((cartTotal$ | async)!) }}</span>
+              </div>
+              <div class="total-row">
+                <span>Phí vận chuyển:</span>
+                <span>{{ formatPrice(shippingCost) }}</span>
+              </div>
+              <div class="total-row final-total">
+                <strong>
+                  <span>Tổng cộng:</span>
+                  <span>{{ formatPrice((finalTotal$ | async)!) }}</span>
+                </strong>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </aside>
+
+      <!-- Checkout Forms -->
+      <main class="checkout-forms">
+        <mat-stepper [linear]="isLinear" #stepper>
+          <!-- Step 1: Shipping Information -->
+          <mat-step [stepControl]="shippingForm">
+            <form [formGroup]="shippingForm">
+              <ng-template matStepLabel>Thông tin giao hàng</ng-template>
+              
+              <mat-card>
+                <mat-card-header>
+                  <mat-card-title>
+                    <mat-icon>local_shipping</mat-icon>
+                    Địa chỉ giao hàng
+                  </mat-card-title>
+                </mat-card-header>
+                
+                <mat-card-content>
+                  <div class="form-grid">
+                    <!-- Customer Information -->
+                    <div class="form-section">
+                      <h3>Thông tin người nhận</h3>
+                      
+                      <mat-form-field appearance="outline">
+                        <mat-label>Họ và tên *</mat-label>
+                        <input matInput formControlName="fullName" placeholder="Nhập họ và tên">
+                        <mat-error *ngIf="hasError(shippingForm, 'fullName', 'required')">
+                          Vui lòng nhập họ và tên
+                        </mat-error>
+                        <mat-error *ngIf="hasError(shippingForm, 'fullName', 'minlength')">
+                          Họ và tên phải có ít nhất 2 ký tự
+                        </mat-error>
+                      </mat-form-field>
+
+                      <div class="form-row">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Số điện thoại *</mat-label>
+                          <input matInput formControlName="phone" placeholder="0901234567">
+                          <mat-error *ngIf="hasError(shippingForm, 'phone', 'required')">
+                            Vui lòng nhập số điện thoại
+                          </mat-error>
+                          <mat-error *ngIf="hasError(shippingForm, 'phone', 'pattern')">
+                            Số điện thoại không hợp lệ
+                          </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                          <mat-label>Email *</mat-label>
+                          <input matInput type="email" formControlName="email" placeholder="email@example.com">
+                          <mat-error *ngIf="hasError(shippingForm, 'email', 'required')">
+                            Vui lòng nhập email
+                          </mat-error>
+                          <mat-error *ngIf="hasError(shippingForm, 'email', 'email')">
+                            Email không hợp lệ
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <!-- Address Information -->
+                    <div class="form-section">
+                      <h3>Địa chỉ giao hàng</h3>
+                      
+                      <mat-form-field appearance="outline">
+                        <mat-label>Tỉnh/Thành phố *</mat-label>
+                        <mat-select formControlName="province" placeholder="Chọn tỉnh/thành phố">
+                          <mat-option *ngFor="let province of provinces" [value]="province">
+                            {{ province }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="hasError(shippingForm, 'province', 'required')">
+                          Vui lòng chọn tỉnh/thành phố
+                        </mat-error>
+                      </mat-form-field>
+
+                      <div class="form-row">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Quận/Huyện *</mat-label>
+                          <input matInput formControlName="district" placeholder="Nhập quận/huyện">
+                          <mat-error *ngIf="hasError(shippingForm, 'district', 'required')">
+                            Vui lòng nhập quận/huyện
+                          </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                          <mat-label>Phường/Xã *</mat-label>
+                          <input matInput formControlName="ward" placeholder="Nhập phường/xã">
+                          <mat-error *ngIf="hasError(shippingForm, 'ward', 'required')">
+                            Vui lòng nhập phường/xã
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                      <mat-form-field appearance="outline">
+                        <mat-label>Địa chỉ cụ thể *</mat-label>
+                        <textarea matInput formControlName="address" rows="2" 
+                                  placeholder="Số nhà, tên đường..."></textarea>
+                        <mat-error *ngIf="hasError(shippingForm, 'address', 'required')">
+                          Vui lòng nhập địa chỉ cụ thể
+                        </mat-error>
+                        <mat-error *ngIf="hasError(shippingForm, 'address', 'minlength')">
+                          Địa chỉ phải có ít nhất 5 ký tự
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+
+                    <!-- Shipping Method -->
+                    <div class="form-section">
+                      <h3>Phương thức vận chuyển</h3>
+                      
+                      <mat-radio-group formControlName="shippingMethod" class="shipping-options">
+                        <mat-radio-button *ngFor="let option of shippingOptions" 
+                                          [value]="option.value" class="shipping-option">
+                          <div class="shipping-info">
+                            <span class="shipping-label">{{ option.label }}</span>
+                            <span class="shipping-price">{{ formatPrice(option.price) }}</span>
+                          </div>
+                        </mat-radio-button>
+                      </mat-radio-group>
+                    </div>
+
+                    <!-- Order Notes -->
+                    <div class="form-section">
+                      <h3>Ghi chú đơn hàng (không bắt buộc)</h3>
+                      
+                      <mat-form-field appearance="outline">
+                        <mat-label>Ghi chú</mat-label>
+                        <textarea matInput formControlName="notes" rows="3" 
+                                  placeholder="Ghi chú về đơn hàng, ví dụ: giao hàng vào buổi sáng..."></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </mat-card-content>
+
+                <mat-card-actions align="end">
+                  <button mat-button (click)="goBackToCart()">
+                    <mat-icon>arrow_back</mat-icon>
+                    Quay lại giỏ hàng
+                  </button>
+                  <button mat-raised-button color="primary" matStepperNext 
+                          [disabled]="!shippingForm.valid">
+                    Tiếp tục
+                    <mat-icon>arrow_forward</mat-icon>
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </form>
+          </mat-step>
+
+          <!-- Step 2: Payment Method -->
+          <mat-step [stepControl]="paymentForm">
+            <form [formGroup]="paymentForm">
+              <ng-template matStepLabel>Phương thức thanh toán</ng-template>
+              
+              <mat-card>
+                <mat-card-header>
+                  <mat-card-title>
+                    <mat-icon>payment</mat-icon>
+                    Phương thức thanh toán
+                  </mat-card-title>
+                </mat-card-header>
+                
+                <mat-card-content>
+                  <div class="payment-methods">
+                    <mat-radio-group formControlName="paymentMethod" class="payment-options">
+                      <mat-radio-button *ngFor="let method of paymentMethods" 
+                                        [value]="method.value" class="payment-option">
+                        <div class="payment-info">
+                          <mat-icon class="payment-icon">
+                            {{ method.value === 'cod' ? 'local_shipping' : 
+                               method.value === 'bank_transfer' ? 'account_balance' :
+                               method.value === 'credit_card' ? 'credit_card' : 'account_balance_wallet' }}
+                          </mat-icon>
+                          <span class="payment-label">{{ method.label }}</span>
+                        </div>
+                      </mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+
+                  <!-- Payment Details based on selected method -->
+                  <div class="payment-details" *ngIf="selectedPayment === 'bank_transfer'">
+                    <div class="bank-info">
+                      <h4>Thông tin chuyển khoản:</h4>
+                      <p><strong>Ngân hàng:</strong> Techcombank</p>
+                      <p><strong>Số tài khoản:</strong> 123456789</p>
+                      <p><strong>Chủ tài khoản:</strong> CÔNG TY TTDN</p>
+                      <p><strong>Nội dung:</strong> [Mã đơn hàng] [Tên khách hàng]</p>
+                    </div>
+                  </div>
+
+                  <!-- Terms and Conditions -->
+                  <div class="terms-section">
+                    <mat-checkbox formControlName="acceptTerms">
+                      Tôi đồng ý với 
+                      <a href="/terms" target="_blank">điều khoản dịch vụ</a> 
+                      và 
+                      <a href="/privacy" target="_blank">chính sách bảo mật</a>
+                    </mat-checkbox>
+                    <mat-error *ngIf="hasError(paymentForm, 'acceptTerms', 'required')">
+                      Vui lòng đồng ý với điều khoản dịch vụ
+                    </mat-error>
+                  </div>
+                </mat-card-content>
+
+                <mat-card-actions align="end">
+                  <button mat-button matStepperPrevious>
+                    <mat-icon>arrow_back</mat-icon>
+                    Quay lại
+                  </button>
+                  <button mat-raised-button color="primary" 
+                          (click)="onSubmitOrder()" 
+                          [disabled]="!paymentForm.valid || isSubmitting">
+                    <mat-progress-spinner *ngIf="isSubmitting" diameter="20" mode="indeterminate">
+                    </mat-progress-spinner>
+                    <mat-icon *ngIf="!isSubmitting">check</mat-icon>
+                    {{ isSubmitting ? 'Đang xử lý...' : 'Đặt hàng' }}
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </form>
+          </mat-step>
+        </mat-stepper>
+      </main>
+    </div>
+
+    <!-- Empty Cart State -->
+              <div class="empty-cart" *ngIf="(cart$ | async)?.items?.length === 0">
+      <mat-card>
+        <mat-card-content>
+          <div class="empty-content">
+            <mat-icon>shopping_cart</mat-icon>
+            <h2>Giỏ hàng trống</h2>
+            <p>Bạn chưa có sản phẩm nào trong giỏ hàng</p>
+            <button mat-raised-button color="primary" (click)="continueShopping()">
+              <mat-icon>shopping_bag</mat-icon>
+              Tiếp tục mua sắm
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

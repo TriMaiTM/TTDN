@@ -40,8 +40,8 @@ export class AuthService {
   user = this.userSignal.asReadonly();
   isLoading = this.loadingSignal.asReadonly();
   error = this.errorSignal.asReadonly();
-  isAuthenticated = computed(() => this.user() !== null);
-  isAdmin = computed(() => this.user()?.role === 'admin');
+  isAuthenticatedSignal = computed(() => this.user() !== null);
+  isAdminSignal = computed(() => this.user()?.role === 'admin');
 
   // Observable for components that need it
   user$ = user(this.auth).pipe(
@@ -59,8 +59,11 @@ export class AuthService {
   );
 
   constructor() {
-    // Initialize auth state
-    this.user$.subscribe();
+    // Initialize auth state - wait for auth state to be restored
+    this.user$.subscribe(user => {
+      // Auth state has been initialized
+      this.loadingSignal.set(false);
+    });
   }
 
   /**
@@ -281,6 +284,20 @@ export class AuthService {
    */
   clearError(): void {
     this.errorSignal.set(null);
+  }
+
+  /**
+   * Check if user is authenticated (method for guards)
+   */
+  isAuthenticated(): boolean {
+    return this.user() !== null;
+  }
+
+  /**
+   * Check if user is admin (method for guards)  
+   */
+  isAdmin(): boolean {
+    return this.user()?.role === 'admin';
   }
 
   /**

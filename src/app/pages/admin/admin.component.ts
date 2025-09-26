@@ -48,6 +48,15 @@ import { MatIconModule } from '@angular/material/icon';
             
             <button 
               mat-raised-button 
+              color="primary" 
+              routerLink="/admin/orders"
+              class="admin-btn">
+              <mat-icon>shopping_cart</mat-icon>
+              Quản Lý Đơn Hàng
+            </button>
+            
+            <button 
+              mat-raised-button 
               color="accent" 
               routerLink="/admin/products"
               class="admin-btn">
@@ -62,6 +71,15 @@ import { MatIconModule } from '@angular/material/icon';
               class="admin-btn">
               <mat-icon>category</mat-icon>
               Quản Lý Danh Mục
+            </button>
+            
+            <button 
+              mat-raised-button 
+              color="warn" 
+              routerLink="/admin/checkout-test"
+              class="admin-btn">
+              <mat-icon>payment</mat-icon>
+              Test Checkout Flow
             </button>
             
             <button 
