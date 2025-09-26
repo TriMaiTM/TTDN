@@ -41,5 +41,5 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Firebase config (contains sensitive keys)
-/src/environments/firebase.config.ts
+# Firebase config (contains sensitive keys) - commented out for deployment
+# /src/environments/firebase.config.ts
