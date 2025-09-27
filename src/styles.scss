@@ -14,7 +14,7 @@
   --accent-yellow: #caa84a;
   --accent-blue: #667eea;
   --accent-purple: #764ba2;
-  --nav-text: #111;
+  --nav-text: #000000;
   --menu-border: #0f6b66;
   --header-bg: #ffffff;
   --dropdown-bg: #ffffff;
@@ -32,6 +32,7 @@ body {
   color: var(--text-primary); 
   background: var(--bg-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 { 

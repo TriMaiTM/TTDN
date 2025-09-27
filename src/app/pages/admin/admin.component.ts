@@ -30,20 +30,11 @@ import { MatIconModule } from '@angular/material/icon';
           <div class="admin-grid">
             <button 
               mat-raised-button 
-              color="warn" 
+              color="primary" 
               routerLink="/admin/simple-test"
               class="admin-btn">
               <mat-icon>bug_report</mat-icon>
               Test Firebase
-            </button>
-            
-            <button 
-              mat-raised-button 
-              color="primary" 
-              routerLink="/admin/data-init"
-              class="admin-btn">
-              <mat-icon>cloud_upload</mat-icon>
-              Khởi Tạo Dữ Liệu
             </button>
             
             <button 
@@ -57,7 +48,7 @@ import { MatIconModule } from '@angular/material/icon';
             
             <button 
               mat-raised-button 
-              color="accent" 
+              color="primary" 
               routerLink="/admin/products"
               class="admin-btn">
               <mat-icon>inventory</mat-icon>
@@ -75,16 +66,7 @@ import { MatIconModule } from '@angular/material/icon';
             
             <button 
               mat-raised-button 
-              color="warn" 
-              routerLink="/admin/checkout-test"
-              class="admin-btn">
-              <mat-icon>payment</mat-icon>
-              Test Checkout Flow
-            </button>
-            
-            <button 
-              mat-raised-button 
-              color="accent" 
+              color="primary" 
               routerLink="/admin/news"
               class="admin-btn">
               <mat-icon>article</mat-icon>

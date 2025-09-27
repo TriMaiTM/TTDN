@@ -2,7 +2,7 @@
   <div class="register-wrapper">
     <mat-card class="register-card">
       <mat-card-header class="register-header">
-        <mat-card-title>🎉 ĐĂNG KÝ</mat-card-title>
+        <mat-card-title>ĐĂNG KÝ</mat-card-title>
         <mat-card-subtitle>Tạo tài khoản để khám phá những điều tuyệt vời</mat-card-subtitle>
       </mat-card-header>
 
@@ -126,13 +126,6 @@
             <mat-icon *ngIf="isLoading()">refresh</mat-icon>
             {{ isLoading() ? 'Đang đăng ký...' : 'Đăng ký' }}
           </button>
-
-          <!-- Test Buttons -->
-          <div class="test-buttons">
-            <button mat-stroked-button type="button" (click)="fillTestUser()">
-              Điền thông tin test user
-            </button>
-          </div>
         </form>
 
         <!-- Login Link -->

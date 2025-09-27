@@ -1,9 +1,19 @@
 :root {
   --accent-yellow: #caa84a;
-  --nav-text: #111;
+  --nav-text: #000000;
   --menu-border: #0f6b66;
   --header-bg: #ffffff;
   --dropdown-bg: #ffffff;
+}
+
+// Tắt cursor blinking trong header
+.site-toolbar, .site-toolbar * {
+  caret-color: transparent !important;
+  
+  &:focus, &:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
 }
 
 .site-toolbar {
@@ -11,6 +21,11 @@
   border-bottom: 1px solid var(--border-color);
   color: var(--nav-text);
   transition: background-color 0.3s ease, border-color 0.3s ease;
+  
+  * {
+    caret-color: transparent !important;
+    outline: none !important;
+  }
 
   .toolbar-inner {
     display:flex;
@@ -20,6 +35,11 @@
     max-width:1200px;
     margin:0 auto;
     padding:8px 16px;
+    
+    input, textarea, [contenteditable] {
+      caret-color: transparent !important;
+      cursor: default !important;
+    }
   }
 
   .theme-toggle {
@@ -85,14 +105,16 @@
     gap:6px;
   }
 
-  /* hover -> đổi màu chữ sang vàng đậm */
+  /* hover -> đổi màu chữ sang vàng */
   .nav-item:hover {
     color: var(--accent-yellow);
     background: transparent;
   }
 
   /* active link */
-  a.active.nav-item { color: var(--accent-yellow); }
+  a.active.nav-item { 
+    color: #000000 !important;
+  }
 
   /* dropdown wrapper */
   .has-dropdown {
@@ -172,16 +194,7 @@
     to   { opacity: 1; transform: translateY(0) scale(1); }
   }
 
-  // Contact button styling
-  .contact-btn {
-    margin-left: 20px;
-    color: white !important;
-    
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-  }
+
 
   // Admin link styling
   .admin-link {
@@ -294,7 +307,7 @@
   }
   
   &:hover {
-    color: var(--accent-yellow);
+    color: #000000;
     background: rgba(255, 255, 255, 0.05);
   }
 }

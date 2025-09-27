@@ -18,14 +18,12 @@ import { CartComponent } from './pages/cart/cart.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { OrderSuccessComponent } from './pages/order-success/order-success.component';
 import { OrderHistoryComponent } from './pages/order-history/order-history.component';
-import { DataInitializationComponent } from './pages/admin/data-initialization/data-initialization.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { FirebaseTestComponent } from './pages/admin/firebase-test/firebase-test.component';
 import { SimpleTestComponent } from './pages/admin/simple-test/simple-test-new.component';
 import { ProductManagementComponent } from './pages/admin/product-management/product-management.component';
 import { CategoryManagementComponent } from './pages/admin/category-management/category-management.component';
 import { OrderManagementComponent } from './pages/admin/order-management/order-management.component';
-import { CheckoutTestComponent } from './pages/admin/checkout-test/checkout-test.component';
 import { NewsAdminComponent } from './pages/admin/news-admin/news-admin';
 import { LoginComponent } from './pages/auth/login/login';
 import { RegisterComponent } from './pages/auth/register/register';
@@ -92,13 +90,7 @@ export const routes: Route[] = [
   { path: 'login', redirectTo: 'auth/login' },
   { path: 'register', redirectTo: 'auth/register' },
   
-  // Temporary data initialization route (no auth guard)
-  { 
-    path: 'data-init-temp', 
-    component: DataInitializationComponent, 
-    title: 'Temp Data Init',
-    data: { animation: 'AdminPage' } 
-  },
+  // Removed temporary data initialization route
 
   // Admin routes (protected by admin guard)
   { 
@@ -115,13 +107,7 @@ export const routes: Route[] = [
     canActivate: [adminGuard],
     data: { animation: 'AdminPage' } 
   },
-  { 
-    path: 'admin/data-init', 
-    component: DataInitializationComponent, 
-    title: 'Khởi tạo dữ liệu',
-    canActivate: [adminGuard],
-    data: { animation: 'AdminPage' } 
-  },
+  // Removed data-init route
   { 
     path: 'admin/firebase-test', 
     component: FirebaseTestComponent, 
@@ -150,13 +136,7 @@ export const routes: Route[] = [
     canActivate: [adminGuard],
     data: { animation: 'AdminPage' } 
   },
-  { 
-    path: 'admin/checkout-test', 
-    component: CheckoutTestComponent, 
-    title: 'Test Checkout Flow',
-    canActivate: [adminGuard],
-    data: { animation: 'AdminPage' } 
-  },
+  // Removed checkout-test route
   { 
     path: 'admin/news', 
     component: NewsAdminComponent, 

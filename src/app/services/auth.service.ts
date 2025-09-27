@@ -40,7 +40,7 @@ export class AuthService {
   user = this.userSignal.asReadonly();
   isLoading = this.loadingSignal.asReadonly();
   error = this.errorSignal.asReadonly();
-  isAuthenticatedSignal = computed(() => this.user() !== null);
+    isAuthenticatedSignal = computed(() => this.user() !== null);
   isAdminSignal = computed(() => this.user()?.role === 'admin');
 
   // Observable for components that need it
