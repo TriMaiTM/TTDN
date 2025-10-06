@@ -3,7 +3,16 @@ services:
     name: ttdn-store
     env: static
     buildCommand: npm install && npm run build
-    staticPublishPath: ./dist/TTDN_3
+    staticPublishPath: ./dist/TTDN_3/browser
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+  - type: web
+    name: ttdn-store
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist/browser
     routes:
       - type: rewrite
         source: /*
