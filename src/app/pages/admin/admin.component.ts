@@ -72,6 +72,33 @@ import { MatIconModule } from '@angular/material/icon';
               <mat-icon>article</mat-icon>
               Quản Lý Tin Tức
             </button>
+            
+            <button 
+              mat-raised-button 
+              color="accent" 
+              routerLink="/admin/replication"
+              class="admin-btn">
+              <mat-icon>storage</mat-icon>
+              Database Replication
+            </button>
+            
+            <button 
+              mat-raised-button 
+              color="warn" 
+              routerLink="/admin/replication-demo"
+              class="admin-btn">
+              <mat-icon>science</mat-icon>
+              Replication Demo
+            </button>
+            
+            <button 
+              mat-raised-button 
+              color="primary" 
+              routerLink="/admin/database-sync"
+              class="admin-btn">
+              <mat-icon>sync</mat-icon>
+              Database Sync
+            </button>
           </div>
         </mat-card-content>
       </mat-card>

@@ -14,7 +14,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Category } from '../../../models';
-import { DirectFirebaseProductService } from '../../../services/direct-firebase-product.service';
+import { ReplicatedProductService } from '../../../services/replicated-product.service';
 
 @Component({
   selector: 'app-category-management',
@@ -404,7 +404,7 @@ import { DirectFirebaseProductService } from '../../../services/direct-firebase-
 })
 export class CategoryManagementComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private productService = inject(DirectFirebaseProductService);
+  private productService = inject(ReplicatedProductService);
   private snackBar = inject(MatSnackBar);
 
   categories: Category[] = [];

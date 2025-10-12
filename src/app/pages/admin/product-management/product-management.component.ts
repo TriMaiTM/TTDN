@@ -13,7 +13,7 @@ import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { Product, Category } from '../../../models';
-import { DirectFirebaseProductService } from '../../../services/direct-firebase-product.service';
+import { ReplicatedProductService } from '../../../services/replicated-product.service';
 
 @Component({
   selector: 'app-product-management',
@@ -39,7 +39,7 @@ import { DirectFirebaseProductService } from '../../../services/direct-firebase-
 })
 export class ProductManagementComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private productService = inject(DirectFirebaseProductService);
+  private productService = inject(ReplicatedProductService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
 

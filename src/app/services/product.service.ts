@@ -1,13 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, map, of, firstValueFrom } from 'rxjs';
 import { Product, Category, SearchParams, SearchResult, ProductFilter } from '../models';
-import { DirectFirebaseProductService } from './direct-firebase-product.service';
+import { ReplicatedProductService } from './replicated-product.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  private firebaseProductService = inject(DirectFirebaseProductService);
+  private firebaseProductService = inject(ReplicatedProductService);
   private productsSubject = new BehaviorSubject<Product[]>([]);
   public products$ = this.productsSubject.asObservable();
 

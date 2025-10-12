@@ -9,8 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { FirebaseProductService } from '../../services/firebase-product.service';
-import { DirectFirebaseProductService } from '../../services/direct-firebase-product.service';
+import { ReplicatedProductService } from '../../services/replicated-product.service';
 import { CartService } from '../../services/cart.service';
 import { Product, Category, SearchParams, SearchResult } from '../../models';
 import { Observable, combineLatest } from 'rxjs';
@@ -56,7 +55,7 @@ export class ProductsComponent implements OnInit {
   currentCategory: Category | null = null;
 
   constructor(
-    private productService: DirectFirebaseProductService,
+    private productService: ReplicatedProductService,
     private cartService: CartService,
     private route: ActivatedRoute,
     private router: Router
@@ -65,13 +64,13 @@ export class ProductsComponent implements OnInit {
     this.categories$ = this.productService.getCategories();
     
     // Direct test of Firebase service
-    console.log('🔍 Testing DirectFirebaseProductService...');
+    console.log('🔍 Testing ReplicatedProductService...');
     this.productService.getProducts({ limit: 5 }).subscribe({
       next: (result) => {
-        console.log('🎯 DirectFirebaseProductService test result:', result);
+        console.log('🎯 ReplicatedProductService test result:', result);
       },
       error: (error) => {
-        console.error('❌ DirectFirebaseProductService test error:', error);
+        console.error('❌ ReplicatedProductService test error:', error);
       }
     });
   }

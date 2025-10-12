@@ -25,6 +25,10 @@ import { ProductManagementComponent } from './pages/admin/product-management/pro
 import { CategoryManagementComponent } from './pages/admin/category-management/category-management.component';
 import { OrderManagementComponent } from './pages/admin/order-management/order-management.component';
 import { NewsAdminComponent } from './pages/admin/news-admin/news-admin';
+import { ReplicationManagementComponent } from './components/replication-management/replication-management.component';
+import { ReplicationDemoComponent } from './components/replication-demo/replication-demo.component';
+import { DatabaseSyncComponent } from './components/database-sync/database-sync.component';
+import { ReplicationTestComponent } from './components/replication-test/replication-test.component';
 import { LoginComponent } from './pages/auth/login/login';
 import { RegisterComponent } from './pages/auth/register/register';
 import { authGuard, adminGuard, guestGuard } from './guards/auth.guard';
@@ -141,6 +145,34 @@ export const routes: Route[] = [
     path: 'admin/news', 
     component: NewsAdminComponent, 
     title: 'Quản lý tin tức',
+    canActivate: [adminGuard],
+    data: { animation: 'AdminPage' } 
+  },
+  { 
+    path: 'admin/replication', 
+    component: ReplicationManagementComponent, 
+    title: 'Quản lý Database Replication',
+    canActivate: [adminGuard],
+    data: { animation: 'AdminPage' } 
+  },
+  { 
+    path: 'admin/replication-demo', 
+    component: ReplicationDemoComponent, 
+    title: 'Demo Database Replication',
+    canActivate: [adminGuard],
+    data: { animation: 'AdminPage' } 
+  },
+  { 
+    path: 'admin/database-sync', 
+    component: DatabaseSyncComponent, 
+    title: 'Database Sync',
+    canActivate: [adminGuard],
+    data: { animation: 'AdminPage' } 
+  },
+  { 
+    path: 'admin/replication-test', 
+    component: ReplicationTestComponent, 
+    title: 'Replication Test',
     canActivate: [adminGuard],
     data: { animation: 'AdminPage' } 
   },
