@@ -352,10 +352,10 @@ export class ReplicatedProductService {
   private async fetchFeaturedProducts(db: Firestore, limitCount: number): Promise<Product[]> {
     try {
       const productsCollection = collection(db, 'products');
+      // Temporarily simplified query to avoid index requirement
       const q = query(
         productsCollection, 
         where('featured', '==', true),
-        orderBy('rating', 'desc'),
         firestoreLimit(limitCount)
       );
 
