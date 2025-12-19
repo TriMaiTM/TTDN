@@ -9,7 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { ReplicatedProductService } from '../../services/replicated-product.service';
+import { DirectFirebaseProductService } from '../../services/direct-firebase-product.service';
 import { CartService } from '../../services/cart.service';
 import { Product, Category, SearchParams, SearchResult } from '../../models';
 import { Observable, combineLatest, BehaviorSubject, of } from 'rxjs';
@@ -55,7 +55,7 @@ export class ProductsComponent implements OnInit {
     currentCategory: Category | null = null;
 
     constructor(
-        private productService: ReplicatedProductService,
+        private productService: DirectFirebaseProductService,
         private cartService: CartService,
         private route: ActivatedRoute,
         private router: Router
@@ -157,7 +157,6 @@ export class ProductsComponent implements OnInit {
 
     addToCart(product: Product): void {
         this.cartService.addToCart(product, 1);
-        // Could add a toast notification here
     }
 
     formatPrice(price: number): string {
@@ -175,7 +174,6 @@ export class ProductsComponent implements OnInit {
     }
 
     clearFilters(): void {
-        console.log('Clearing all filters');
         this.searchControl.setValue('');
         this.categoryControl.setValue('');
         this.sortControl.setValue('name');
@@ -183,38 +181,21 @@ export class ProductsComponent implements OnInit {
         this.currentCategory = null;
     }
 
-    // Debug method to test all products
-    debugAllProducts(): void {
-        console.log('Loading all products for debug...');
-        this.productService.getProducts({ limit: 100 }).subscribe((result: SearchResult<Product>) => {
-            console.log('All products debug:', result);
-            result.items.forEach(p => console.log(`Product: ${p.name}, Category: ${p.category}`));
-        });
-    }
-
     goToProduct(productId: string): void {
         this.router.navigate(['/product', productId]).then(() => {
-            // Scroll to top after navigation
             window.scrollTo(0, 0);
         });
     }
 
     addToWishlist(product: Product): void {
-        // Add wishlist functionality
         console.log('Added to wishlist:', product.name);
     }
 
     quickView(product: Product): void {
-        // Open quick view modal
         console.log('Quick view:', product.name);
     }
 
-    getMin(a: number, b: number): number {
-        return Math.min(a, b);
-    }
-
     onCategorySelected(categorySlug: string | null) {
-        console.log('Products component received category:', categorySlug);
         this.categoryControl.setValue(categorySlug || '');
         this.page$.next(1);
     }
@@ -230,14 +211,10 @@ export class ProductsComponent implements OnInit {
             case 'highest_rated':
                 this.sortControl.setValue('rating');
                 break;
-            case 'on_sale':
-                // Could implement discount filtering
-                break;
         }
         this.page$.next(1);
     }
 
-    // Stock display methods
     getProductStockClass(product: Product): string {
         if (!product.stock || product.stock === 0) return 'stock-out';
         if (product.stock < 5) return 'stock-low';
@@ -254,5 +231,9 @@ export class ProductsComponent implements OnInit {
         if (!product.stock || product.stock === 0) return 'Hết hàng';
         if (product.stock < 5) return `Còn ${product.stock}`;
         return `Còn ${product.stock}`;
+    }
+
+    getMin(a: number, b: number): number {
+        return Math.min(a, b);
     }
 }
