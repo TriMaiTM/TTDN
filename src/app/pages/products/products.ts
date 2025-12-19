@@ -9,8 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { FirebaseProductService } from '../../services/firebase-product.service';
-import { DirectFirebaseProductService } from '../../services/direct-firebase-product.service';
+import { ReplicatedProductService } from '../../services/replicated-product.service';
 import { CartService } from '../../services/cart.service';
 import { Product, Category, SearchParams, SearchResult } from '../../models';
 import { Observable, combineLatest, BehaviorSubject, of } from 'rxjs';
@@ -56,7 +55,7 @@ export class ProductsComponent implements OnInit {
     currentCategory: Category | null = null;
 
     constructor(
-        private productService: DirectFirebaseProductService,
+        private productService: ReplicatedProductService,
         private cartService: CartService,
         private route: ActivatedRoute,
         private router: Router
@@ -143,13 +142,6 @@ export class ProductsComponent implements OnInit {
         this.pageSize = event.pageSize;
         this.page$.next(event.pageIndex + 1); // Trigger new emission
     }
-
-    // Reset page on filter change?
-    // We can add a tap() in the pipeline or separate logic.
-    // For now, let's keep it simple. If we wanted to reset page on filter change, we'd need more complex logic
-    // or manually set this.page$.next(1) when controls change.
-    // But since controls are observables, we can't easily hook "change -> reset page" inside the same combineLatest without loop.
-    // For now, let's add specific subscriptions to reset page.
 
     private setupPageReset() {
         combineLatest([
