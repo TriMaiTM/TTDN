@@ -28,33 +28,39 @@ export const authGuard: CanActivateFn = (route, state) => {
 /**
  * Guard bảo vệ các routes chỉ dành cho admin
  */
+import { toObservable } from '@angular/core/rxjs-interop';
+import { filter, map, take } from 'rxjs/operators';
+
 export const adminGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // If still loading auth state, allow navigation temporarily
-  if (authService.isLoading()) {
-    return true;
-  }
+  // Return an Observable that waits for loading to complete
+  return toObservable(authService.isLoading).pipe(
+    filter(isLoading => !isLoading), // Wait until isLoading becomes false
+    take(1), // Complete after first false emission
+    map(() => {
+      // Now Auth is ready
+      if (!authService.isAuthenticated()) {
+        router.navigate(['/auth/login'], {
+          queryParams: { returnUrl: state.url }
+        });
+        return false;
+      }
 
-  // Kiểm tra xem user có đăng nhập không
-  if (!authService.isAuthenticated()) {
-    router.navigate(['/auth/login'], {
-      queryParams: { returnUrl: state.url }
-    });
-    return false;
-  }
-
-  // Kiểm tra xem user có phải admin không
-  if (authService.isAdmin()) {
-    return true;
-  } else {
-    // User đã đăng nhập nhưng không phải admin
-    router.navigate(['/'], {
-      queryParams: { error: 'access-denied' }
-    });
-    return false;
-  }
+      console.log('AdminGuard checking user...', authService.user());
+      if (authService.isAdmin()) {
+        console.log('AdminGuard passed.');
+        return true;
+      } else {
+        console.warn('AdminGuard rejected. Role is not admin/branch_admin.');
+        router.navigate(['/'], {
+          queryParams: { error: 'access-denied' }
+        });
+        return false;
+      }
+    })
+  );
 };
 
 /**

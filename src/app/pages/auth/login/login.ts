@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
   async onSubmit() {
     if (this.loginForm.valid) {
       const credentials: LoginCredentials = this.loginForm.value;
-      
+
       try {
         await this.authService.login(credentials);
         this.snackBar.open('Đăng nhập thành công!', 'Đóng', {
@@ -80,6 +80,26 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  async createDemoBranchAdmin() {
+    const credentials = {
+      email: `admin_danang_${Date.now()}@ttdn.com`, // Unique email
+      password: 'password123',
+      name: 'Admin Đà Nẵng (Demo)',
+      confirmPassword: 'password123'
+    };
+
+    try {
+      if (confirm('Tạo tài khoản Admin Đà Nẵng (Demo)?\nEmail: ' + credentials.email + '\nPass: password123')) {
+        await this.authService.createBranchAdmin(credentials, 'ttdn-store', 'TTDN Đà Nẵng');
+        this.snackBar.open('Đã tạo và đăng nhập Admin Demo!', 'OK');
+      }
+    } catch (e: any) {
+      alert('Lỗi: ' + e.message);
+    }
+  }
+
+
+
   private markFormGroupTouched() {
     Object.keys(this.loginForm.controls).forEach(key => {
       const control = this.loginForm.get(key);
@@ -89,20 +109,20 @@ export class LoginComponent implements OnInit {
 
   getErrorMessage(fieldName: string): string {
     const control = this.loginForm.get(fieldName);
-    
+
     if (control?.hasError('required')) {
       return `${this.getFieldLabel(fieldName)} là bắt buộc`;
     }
-    
+
     if (control?.hasError('email')) {
       return 'Email không hợp lệ';
     }
-    
+
     if (control?.hasError('minlength')) {
       const minLength = control.errors?.['minlength']?.requiredLength;
       return `Mật khẩu phải có ít nhất ${minLength} ký tự`;
     }
-    
+
     return '';
   }
 

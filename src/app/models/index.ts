@@ -109,20 +109,20 @@ export interface OrderItem {
   totalPrice: number;
 }
 
-export type OrderStatus = 
-  | 'pending' 
-  | 'confirmed' 
-  | 'processing' 
-  | 'shipped' 
-  | 'delivered' 
-  | 'cancelled' 
+export type OrderStatus =
+  | 'pending'
+  | 'confirmed'
+  | 'processing'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled'
   | 'returned';
 
-export type PaymentStatus = 
-  | 'pending' 
-  | 'paid' 
-  | 'failed' 
-  | 'refunded' 
+export type PaymentStatus =
+  | 'pending'
+  | 'paid'
+  | 'failed'
+  | 'refunded'
   | 'partially_refunded';
 
 // User Models
@@ -143,7 +143,7 @@ export interface User {
   lastLogin?: Date;
 }
 
-export type UserRole = 'user' | 'admin';
+export type UserRole = 'user' | 'admin' | 'branch_admin';
 
 // Auth Models
 export interface AuthUser {
@@ -260,12 +260,12 @@ export interface SearchParams {
   limit?: number;
 }
 
-export type ProductSortBy = 
-  | 'name' 
-  | 'price' 
-  | 'rating' 
-  | 'createdAt' 
-  | 'popularity' 
+export type ProductSortBy =
+  | 'name'
+  | 'price'
+  | 'rating'
+  | 'createdAt'
+  | 'popularity'
   | 'discount';
 
 export interface SearchResult<T> {
@@ -350,11 +350,11 @@ export interface NewsFilter {
   };
 }
 
-export type NewsSortBy = 
-  | 'title' 
-  | 'publishedAt' 
-  | 'createdAt' 
-  | 'viewCount' 
+export type NewsSortBy =
+  | 'title'
+  | 'publishedAt'
+  | 'createdAt'
+  | 'viewCount'
   | 'author';
 
 export interface NewsSearchParams {

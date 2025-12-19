@@ -1,18 +1,19 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { 
-  Auth, 
-  signInWithEmailAndPassword, 
+import { MultiDbService } from './multi-database';
+import {
+  Auth,
+  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
   user,
   updateProfile,
   User as FirebaseUser
 } from '@angular/fire/auth';
-import { 
-  Firestore, 
-  doc, 
-  setDoc, 
-  getDoc, 
+import {
+  Firestore,
+  doc,
+  setDoc,
+  getDoc,
   collection,
   query,
   where,
@@ -30,6 +31,7 @@ export class AuthService {
   private auth = inject(Auth);
   private firestore = inject(Firestore);
   private router = inject(Router);
+  private multiDbService = inject(MultiDbService);
 
   // Signals for reactive state management
   private userSignal = signal<User | null>(null);
@@ -40,30 +42,47 @@ export class AuthService {
   user = this.userSignal.asReadonly();
   isLoading = this.loadingSignal.asReadonly();
   error = this.errorSignal.asReadonly();
-    isAuthenticatedSignal = computed(() => this.user() !== null);
-  isAdminSignal = computed(() => this.user()?.role === 'admin');
+  isAuthenticatedSignal = computed(() => this.user() !== null);
+  isAdminSignal = computed(() => {
+    const role = this.user()?.role;
+    return role === 'admin' || role === 'branch_admin';
+  });
 
   // Observable for components that need it
+  // Observable for components that need it
+  // Observable for components that need it
   user$ = user(this.auth).pipe(
-    switchMap(firebaseUser => {
+    switchMap(async firebaseUser => {
+      // FORCE Loading = true whenever auth state changes (e.g. initial load or logout)
+      this.loadingSignal.set(true);
+
       if (firebaseUser) {
-        return this.getUserData(firebaseUser.uid);
+        // Restore connection to branch DB if user is logged in
+        console.log('>>> [AuthService] Found user, connecting to branch...');
+        await this.multiDbService.connectToBranch(firebaseUser.uid);
+        console.log('>>> [AuthService] Connection done, fetching user data...');
+        const userData = await this.getUserData(firebaseUser.uid).toPromise();
+        return userData;
       } else {
-        return of(null);
+        console.log('>>> [AuthService] No user found (Guest).');
+        return null;
       }
     }),
     tap(user => {
-      this.userSignal.set(user);
+      console.log('>>> [AuthService] Pipeline finished. Setting User & Loading=false. User:', user?.id);
+      this.userSignal.set(user || null);
       this.loadingSignal.set(false);
+    }),
+    catchError(err => {
+      console.error('Auth Pipeline Error:', err);
+      this.loadingSignal.set(false);
+      return of(null);
     })
   );
 
   constructor() {
     // Initialize auth state - wait for auth state to be restored
-    this.user$.subscribe(user => {
-      // Auth state has been initialized
-      this.loadingSignal.set(false);
-    });
+    this.user$.subscribe(); // Just subscribe to activate the pipeline
   }
 
   /**
@@ -75,15 +94,23 @@ export class AuthService {
       this.errorSignal.set(null);
 
       const userCredential = await signInWithEmailAndPassword(
-        this.auth, 
-        credentials.email, 
+        this.auth,
+        credentials.email,
         credentials.password
       );
+
+      // --- KẾT NỐI DATABASE CHI NHÁNH ---
+      const isConnected = await this.multiDbService.connectToBranch(userCredential.user.uid);
+
+      if (!isConnected) {
+        console.warn('Không thể kết nối tới database chi nhánh, đang sử dụng database mặc định.');
+        // Tùy chọn: Có thể throw lỗi ở đây nếu bắt buộc phải vào chi nhánh
+      }
 
       const userData = await this.getUserData(userCredential.user.uid).toPromise();
       if (userData) {
         this.userSignal.set(userData);
-        
+
         // Redirect based on role
         if (userData.role === 'admin') {
           this.router.navigate(['/admin']);
@@ -132,10 +159,10 @@ export class AuthService {
 
       await this.createUserDocument(userData);
       this.userSignal.set(userData);
-      
+
       // Redirect to home for regular users
       this.router.navigate(['/']);
-      
+
     } catch (error: any) {
       this.errorSignal.set(this.getErrorMessage(error));
       throw error;
@@ -197,7 +224,7 @@ export class AuthService {
    */
   private async createUserDocument(user: User): Promise<void> {
     const userDocRef = doc(this.firestore, 'users', user.uid);
-    
+
     // Only include defined fields
     const userData: any = {
       uid: user.uid,
@@ -265,6 +292,52 @@ export class AuthService {
   }
 
   /**
+   * DEV ONLY: Create Branch Admin account
+   */
+  async createBranchAdmin(credentials: RegisterCredentials, branchProjectId: string, branchName: string): Promise<void> {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        this.auth,
+        credentials.email,
+        credentials.password
+      );
+
+      await updateProfile(userCredential.user, {
+        displayName: credentials.name
+      });
+
+      // Config fake cho chi nhánh (trong thực tế sẽ lấy từ collection 'branches')
+      const branchConfig = {
+        projectId: branchProjectId,
+        apiKey: "AIzaSyCxaPzeawFMKKbfWlfKRZOHYt41oypFF4g", // Dùng chung key demo
+        authDomain: `${branchProjectId}.firebaseapp.com`,
+        storageBucket: `${branchProjectId}.appspot.com`
+      };
+
+      const userData: any = {
+        id: userCredential.user.uid,
+        uid: userCredential.user.uid,
+        email: credentials.email,
+        name: credentials.name,
+        role: 'branch_admin',
+        branchName: branchName,
+        branchConfig: branchConfig,
+        addresses: [],
+        isEmailVerified: userCredential.user.emailVerified,
+        createdAt: new Date()
+      };
+
+      await this.createUserDocument(userData);
+      this.userSignal.set(userData);
+      this.router.navigate(['/admin']);
+
+    } catch (error: any) {
+      this.errorSignal.set(this.getErrorMessage(error));
+      throw error;
+    }
+  }
+
+  /**
    * Check if email already exists
    */
   async isEmailExists(email: string): Promise<boolean> {
@@ -296,16 +369,62 @@ export class AuthService {
   /**
    * Check if user is admin (method for guards)  
    */
+  /**
+   * Check if user is admin (method for guards)
+   * Supports both Super Admin ('admin') and Branch Admin ('branch_admin')
+   */
   isAdmin(): boolean {
+    const role = this.user()?.role;
+    console.log('Checking isAdmin. Role:', role);
+    return role === 'admin' || role === 'branch_admin';
+  }
+
+  /**
+   * Check if user is Super Admin (Main Database Admin)
+   */
+  isSuperAdmin(): boolean {
     return this.user()?.role === 'admin';
   }
 
   /**
    * Get error message from Firebase error
    */
+  async createSuperAdmin(credentials: RegisterCredentials): Promise<void> {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        this.auth,
+        credentials.email,
+        credentials.password
+      );
+
+      await updateProfile(userCredential.user, {
+        displayName: credentials.name
+      });
+
+      const userData: User = {
+        id: userCredential.user.uid,
+        uid: userCredential.user.uid,
+        email: credentials.email,
+        name: credentials.name,
+        role: 'admin', // Super Admin (Main DB)
+        addresses: [],
+        isEmailVerified: userCredential.user.emailVerified,
+        createdAt: new Date()
+      };
+
+      await this.createUserDocument(userData);
+      this.userSignal.set(userData);
+      this.router.navigate(['/admin']);
+
+    } catch (error: any) {
+      this.errorSignal.set(this.getErrorMessage(error));
+      throw error;
+    }
+  }
+
   private getErrorMessage(error: any): string {
     console.error('Auth error details:', error);
-    
+
     switch (error.code) {
       case 'auth/user-not-found':
         return 'Không tìm thấy tài khoản với email này';
