@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { Category } from '../../models';
-import { DirectFirebaseProductService } from '../../services/direct-firebase-product.service';
+import { ReplicatedProductService } from '../../services/replicated-product.service';
 
 @Component({
   selector: 'app-category-filter',
@@ -103,7 +103,7 @@ export class CategoryFilterComponent implements OnInit {
   @Output() categorySelected = new EventEmitter<string | null>();
   @Output() quickFilterApplied = new EventEmitter<any>();
 
-  private productService = inject(DirectFirebaseProductService);
+  private productService = inject(ReplicatedProductService);
   
   mainCategories: Category[] = [];
   

@@ -14,7 +14,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Product, Category } from '../../models';
-import { DirectFirebaseProductService } from '../../services/direct-firebase-product.service';
+import { ReplicatedProductService } from '../../services/replicated-product.service';
 import { CartService } from '../../services/cart.service';
 
 @Component({
@@ -676,7 +676,7 @@ import { CartService } from '../../services/cart.service';
 export class ProductDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private productService = inject(DirectFirebaseProductService);
+  private productService = inject(ReplicatedProductService);
   private cartService = inject(CartService);
   private snackBar = inject(MatSnackBar);
 

@@ -11,7 +11,7 @@ import { Observable, firstValueFrom } from 'rxjs';
 
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
-import { DirectFirebaseProductService } from '../../services/direct-firebase-product.service';
+import { ReplicatedProductService } from '../../services/replicated-product.service';
 import { Cart, CartItem } from '../../models/order.model';
 
 @Component({
@@ -32,7 +32,7 @@ import { Cart, CartItem } from '../../models/order.model';
 export class CartComponent implements OnInit {
   private cartService = inject(CartService);
   private authService = inject(AuthService);
-  private productService = inject(DirectFirebaseProductService);
+  private productService = inject(ReplicatedProductService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
 

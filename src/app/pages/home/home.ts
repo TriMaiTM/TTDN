@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { DataService } from '../../services/data';
-import { FirebaseProductService } from '../../services/firebase-product.service';
-import { DirectFirebaseProductService } from '../../services/direct-firebase-product.service';
+import { ReplicatedProductService } from '../../services/replicated-product.service';
 import { CartService } from '../../services/cart.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,7 +26,7 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private data: DataService,
-    private productService: DirectFirebaseProductService,
+    private productService: ReplicatedProductService,
     private cartService: CartService,
     private router: Router
   ) {}
